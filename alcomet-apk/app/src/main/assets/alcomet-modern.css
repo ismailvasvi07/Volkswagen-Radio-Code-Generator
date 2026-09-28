@@ -1,0 +1,680 @@
+/* ALCOMET Maintenance Android modern mobile UI v1.1.0 */
+@media (max-width:900px){
+  html.apk-modern{
+    --brand-dark:#0b68c6;
+    --brand-cyan:#19b9ff;
+    --ink:#eef7ff;
+    --muted:#8fa7b9;
+    --line:#173c56;
+    --line-2:#102e45;
+    --bg:#061522;
+    --panel:#0a1c2b;
+    --soft:#0c2031;
+    --shadow:0 14px 40px rgba(0,0,0,.28);
+    --radius:16px;
+  }
+  html.apk-modern[data-theme="light"]{
+    --ink:#182735;
+    --muted:#6e8191;
+    --line:#d8e5ef;
+    --line-2:#e8f0f5;
+    --bg:#eef4f8;
+    --panel:#ffffff;
+    --soft:#f7fafc;
+    --shadow:0 12px 32px rgba(27,58,83,.10);
+  }
+
+  html.apk-modern body{
+    background:
+      radial-gradient(circle at 12% -8%,rgba(25,185,255,.11),transparent 32%),
+      linear-gradient(180deg,#061522 0%,#071827 100%)!important;
+    color:var(--ink)!important;
+  }
+  html.apk-modern[data-theme="light"] body{
+    background:linear-gradient(180deg,#f5f9fc 0%,#edf3f7 100%)!important;
+  }
+  html.apk-modern main{background:transparent!important;}
+  html.apk-modern .content{
+    padding:16px 18px 104px!important;
+    background:transparent!important;
+    overscroll-behavior-y:contain;
+  }
+
+  /* Top application bar */
+  html.apk-modern .topbar{
+    min-height:98px!important;
+    height:98px!important;
+    padding:12px 18px 12px!important;
+    border-bottom:1px solid rgba(44,112,157,.38)!important;
+    background:rgba(5,20,33,.92)!important;
+    box-shadow:none!important;
+    backdrop-filter:blur(20px) saturate(130%);
+    -webkit-backdrop-filter:blur(20px) saturate(130%);
+  }
+  html.apk-modern[data-theme="light"] .topbar{
+    background:rgba(255,255,255,.94)!important;
+    border-bottom-color:#d9e7f1!important;
+  }
+  html.apk-modern .topbar-left{
+    min-width:110px!important;
+    align-items:center!important;
+  }
+  html.apk-modern .page-context{
+    display:flex!important;
+    flex-direction:column!important;
+    align-items:flex-start!important;
+    gap:3px!important;
+  }
+  html.apk-modern .page-context strong{
+    color:var(--ink)!important;
+    font-size:20px!important;
+    line-height:1.05!important;
+    font-weight:720!important;
+    letter-spacing:-.025em!important;
+  }
+  html.apk-modern .page-context:after{
+    content:"ALCOMET Maintenance";
+    color:var(--muted);
+    font-size:10px;
+    font-weight:600;
+    letter-spacing:.035em;
+    white-space:nowrap;
+  }
+  html.apk-modern .topbar-right{
+    gap:8px!important;
+    margin-left:8px!important;
+  }
+  html.apk-modern .topbar .global-new-task-fab,
+  html.apk-modern .mobile-top-lang-btn,
+  html.apk-modern .topbar .top-user>div:first-child,
+  html.apk-modern .topbar .icon-button{
+    width:48px!important;
+    height:48px!important;
+    min-width:48px!important;
+    border-radius:14px!important;
+  }
+  html.apk-modern .topbar .global-new-task-fab{
+    border:1px solid #26bfff!important;
+    background:linear-gradient(145deg,#0877dc,#12adf3)!important;
+    box-shadow:0 8px 22px rgba(0,139,221,.26)!important;
+  }
+  html.apk-modern .mobile-top-lang-btn,
+  html.apk-modern .topbar .top-user>div:first-child,
+  html.apk-modern .topbar .icon-button{
+    color:#a9c3d5!important;
+    border:1px solid #173e59!important;
+    background:#0b2031!important;
+    box-shadow:none!important;
+  }
+  html.apk-modern[data-theme="light"] .mobile-top-lang-btn,
+  html.apk-modern[data-theme="light"] .topbar .top-user>div:first-child,
+  html.apk-modern[data-theme="light"] .topbar .icon-button{
+    background:#f6fafc!important;
+    border-color:#d5e4ee!important;
+    color:#547083!important;
+  }
+  html.apk-modern .topbar .top-user{max-width:48px!important;}
+  html.apk-modern .mobile-top-lang-btn{
+    width:auto!important;
+    min-width:84px!important;
+    padding:0 12px!important;
+  }
+  html.apk-modern .mobile-top-lang-globe svg{width:22px!important;height:22px!important;}
+  html.apk-modern .notification-badge{
+    top:-6px!important;
+    right:-7px!important;
+    min-width:22px!important;
+    height:22px!important;
+    border:2px solid #071827!important;
+    border-radius:999px!important;
+    font-size:10px!important;
+  }
+
+  /* Page heading */
+  html.apk-modern .page-head{
+    margin:0 0 16px!important;
+    padding:0 2px!important;
+    gap:10px!important;
+  }
+  html.apk-modern .page-head h1{
+    margin:0!important;
+    color:var(--ink)!important;
+    font-size:26px!important;
+    line-height:1.1!important;
+    letter-spacing:-.035em!important;
+    font-weight:720!important;
+  }
+  html.apk-modern .page-head p{
+    margin:6px 0 0!important;
+    max-width:620px!important;
+    color:var(--muted)!important;
+    font-size:12px!important;
+    line-height:1.45!important;
+  }
+  html.apk-modern #content:has(.calendar-shell)>.page-head{
+    display:none!important;
+  }
+
+  /* Global panels / cards */
+  html.apk-modern .panel,
+  html.apk-modern .task-create-card,
+  html.apk-modern .machine-card,
+  html.apk-modern .workshop-card,
+  html.apk-modern .handover-card,
+  html.apk-modern .audit-panel,
+  html.apk-modern .people-directory-panel,
+  html.apk-modern .backup-manager-panel,
+  html.apk-modern .backup-policy-panel,
+  html.apk-modern .full-system-panel,
+  html.apk-modern .protection-panel,
+  html.apk-modern .password-reset-panel,
+  html.apk-modern .dashboard-handover-panel{
+    background:linear-gradient(180deg,rgba(12,31,47,.95),rgba(8,25,39,.95))!important;
+    border:1px solid #173c56!important;
+    border-radius:16px!important;
+    box-shadow:0 12px 30px rgba(0,0,0,.18)!important;
+  }
+  html.apk-modern[data-theme="light"] .panel,
+  html.apk-modern[data-theme="light"] .task-create-card,
+  html.apk-modern[data-theme="light"] .machine-card,
+  html.apk-modern[data-theme="light"] .workshop-card,
+  html.apk-modern[data-theme="light"] .handover-card,
+  html.apk-modern[data-theme="light"] .audit-panel,
+  html.apk-modern[data-theme="light"] .people-directory-panel,
+  html.apk-modern[data-theme="light"] .backup-manager-panel,
+  html.apk-modern[data-theme="light"] .backup-policy-panel,
+  html.apk-modern[data-theme="light"] .full-system-panel,
+  html.apk-modern[data-theme="light"] .protection-panel,
+  html.apk-modern[data-theme="light"] .password-reset-panel,
+  html.apk-modern[data-theme="light"] .dashboard-handover-panel{
+    background:#fff!important;
+    border-color:#d9e6ef!important;
+    box-shadow:0 10px 28px rgba(31,65,91,.08)!important;
+  }
+  html.apk-modern .panel-head,
+  html.apk-modern .panel-body{border-color:var(--line)!important;}
+
+  html.apk-modern input,
+  html.apk-modern select,
+  html.apk-modern textarea{
+    min-height:44px!important;
+    color:var(--ink)!important;
+    background:#081b2a!important;
+    border:1px solid #1a4059!important;
+    border-radius:12px!important;
+    box-shadow:none!important;
+  }
+  html.apk-modern[data-theme="light"] input,
+  html.apk-modern[data-theme="light"] select,
+  html.apk-modern[data-theme="light"] textarea{
+    background:#fff!important;
+    border-color:#d1e0ea!important;
+  }
+  html.apk-modern input:focus,
+  html.apk-modern select:focus,
+  html.apk-modern textarea:focus{
+    border-color:#1bbcff!important;
+    box-shadow:0 0 0 3px rgba(25,185,255,.12)!important;
+  }
+  html.apk-modern .btn{
+    min-height:42px!important;
+    border-radius:12px!important;
+    border-color:#1b425d!important;
+    background:#0a2031!important;
+    color:#c9dbe7!important;
+    box-shadow:none!important;
+  }
+  html.apk-modern .btn.primary,
+  html.apk-modern .btn.success{
+    border-color:#20bfff!important;
+    background:linear-gradient(135deg,#0877dc,#15b8f8)!important;
+    color:#fff!important;
+    box-shadow:0 7px 18px rgba(0,139,221,.20)!important;
+  }
+  html.apk-modern[data-theme="light"] .btn{
+    background:#fff!important;
+    border-color:#d2e1eb!important;
+    color:#3f5d70!important;
+  }
+  html.apk-modern[data-theme="light"] .btn.primary,
+  html.apk-modern[data-theme="light"] .btn.success{
+    color:#fff!important;
+  }
+
+  /* Calendar compact premium layout */
+  html.apk-modern .calendar-workshop-filter{
+    margin:0 0 14px!important;
+    padding:0!important;
+    border:0!important;
+    background:transparent!important;
+    box-shadow:none!important;
+  }
+  html.apk-modern .calendar-workshop-filter-title{
+    display:none!important;
+  }
+  html.apk-modern .calendar-workshop-options{
+    display:flex!important;
+    gap:8px!important;
+    overflow-x:auto!important;
+    padding:1px 1px 5px!important;
+    scrollbar-width:none!important;
+  }
+  html.apk-modern .calendar-workshop-options::-webkit-scrollbar{display:none!important;}
+  html.apk-modern .workshop-filter-chip,
+  html.apk-modern .workshop-filter-all{
+    flex:0 0 auto!important;
+    min-height:38px!important;
+    border:1px solid #173d58!important;
+    border-radius:999px!important;
+    background:#091d2d!important;
+    color:#98afc1!important;
+    padding:0 14px!important;
+    font-size:11px!important;
+    font-weight:650!important;
+    box-shadow:none!important;
+  }
+  html.apk-modern .workshop-filter-chip:has(input:checked),
+  html.apk-modern .workshop-filter-all.active{
+    background:linear-gradient(135deg,#0c79dd,#17b6f7)!important;
+    border-color:#21bfff!important;
+    color:#fff!important;
+  }
+  html.apk-modern[data-theme="light"] .workshop-filter-chip,
+  html.apk-modern[data-theme="light"] .workshop-filter-all{
+    background:#fff!important;
+    border-color:#d5e4ee!important;
+    color:#587185!important;
+  }
+
+  html.apk-modern .calendar-shell{
+    overflow:visible!important;
+    padding:0!important;
+    border:0!important;
+    border-radius:0!important;
+    background:transparent!important;
+    box-shadow:none!important;
+  }
+  html.apk-modern .calendar-control{
+    display:grid!important;
+    grid-template-columns:1fr!important;
+    gap:12px!important;
+    margin:0 0 10px!important;
+    overflow:visible!important;
+    position:relative!important;
+    z-index:20!important;
+  }
+  html.apk-modern .calendar-control>div:last-child{display:none!important;}
+  html.apk-modern .view-toggle{
+    order:1!important;
+    width:100%!important;
+    display:grid!important;
+    grid-template-columns:1fr 1fr!important;
+    gap:0!important;
+    padding:4px!important;
+    border:1px solid #173d58!important;
+    border-radius:16px!important;
+    background:#081b2a!important;
+    overflow:hidden!important;
+  }
+  html.apk-modern .view-toggle button{
+    min-height:42px!important;
+    margin:0!important;
+    border:0!important;
+    border-radius:12px!important;
+    background:transparent!important;
+    color:#a3b8c7!important;
+    font-size:12px!important;
+    font-weight:650!important;
+  }
+  html.apk-modern .view-toggle button.active{
+    background:linear-gradient(135deg,#0878df,#12b5fa)!important;
+    color:#fff!important;
+    box-shadow:0 5px 14px rgba(0,139,221,.22)!important;
+  }
+  html.apk-modern .month-nav{
+    order:2!important;
+    min-height:58px!important;
+    display:grid!important;
+    grid-template-columns:48px 1fr 48px!important;
+    align-items:center!important;
+    padding:4px 5px!important;
+    border:1px solid #173d58!important;
+    border-radius:16px!important;
+    background:linear-gradient(180deg,#0a1f30,#081a29)!important;
+    overflow:visible!important;
+    position:relative!important;
+    z-index:45!important;
+  }
+  html.apk-modern .month-nav>[data-cal-prev],
+  html.apk-modern .month-nav>[data-cal-next]{
+    width:42px!important;
+    height:42px!important;
+    border:0!important;
+    border-radius:12px!important;
+    background:transparent!important;
+    color:#e6f4ff!important;
+    font-size:31px!important;
+    line-height:1!important;
+  }
+  html.apk-modern .calendar-date-trigger{
+    min-width:0!important;
+    padding:7px 4px!important;
+    color:#f1f8fd!important;
+    font-size:21px!important;
+    font-weight:620!important;
+    letter-spacing:-.025em!important;
+  }
+  html.apk-modern .calendar-date-trigger:hover,
+  html.apk-modern .calendar-date-trigger:focus-visible{
+    background:#0f2b40!important;
+    color:#fff!important;
+  }
+  html.apk-modern[data-theme="light"] .view-toggle,
+  html.apk-modern[data-theme="light"] .month-nav{
+    background:#fff!important;
+    border-color:#d7e5ee!important;
+  }
+  html.apk-modern[data-theme="light"] .view-toggle button{color:#60798b!important;}
+  html.apk-modern[data-theme="light"] .month-nav>[data-cal-prev],
+  html.apk-modern[data-theme="light"] .month-nav>[data-cal-next],
+  html.apk-modern[data-theme="light"] .calendar-date-trigger{color:#22445d!important;}
+
+  html.apk-modern .week-head{
+    display:grid!important;
+    grid-template-columns:repeat(7,1fr)!important;
+    margin:0!important;
+    border:1px solid #173d58!important;
+    border-bottom:0!important;
+    border-radius:14px 14px 0 0!important;
+    overflow:hidden!important;
+    background:#0a1d2c!important;
+  }
+  html.apk-modern .week-head>div{
+    min-width:0!important;
+    height:42px!important;
+    display:flex!important;
+    align-items:center!important;
+    justify-content:center!important;
+    padding:0 2px!important;
+    color:#9eb3c3!important;
+    border-right:1px solid #173d58!important;
+    font-size:9px!important;
+    font-weight:620!important;
+    text-transform:lowercase!important;
+    overflow:hidden!important;
+    white-space:nowrap!important;
+  }
+  html.apk-modern .week-head>div:last-child{border-right:0!important;}
+  html.apk-modern .month-grid{
+    display:grid!important;
+    grid-template-columns:repeat(7,minmax(0,1fr))!important;
+    border:1px solid #173d58!important;
+    border-radius:0 0 14px 14px!important;
+    overflow:hidden!important;
+    background:#071927!important;
+    box-shadow:0 12px 28px rgba(0,0,0,.12)!important;
+  }
+  html.apk-modern .month-cell{
+    min-width:0!important;
+    min-height:110px!important;
+    height:110px!important;
+    padding:9px 6px!important;
+    background:linear-gradient(180deg,rgba(8,27,42,.96),rgba(6,23,36,.96))!important;
+    border-right:1px solid #173d58!important;
+    border-bottom:1px solid #173d58!important;
+    color:#dce9f2!important;
+    overflow:hidden!important;
+  }
+  html.apk-modern .month-cell:nth-child(7n){border-right:0!important;}
+  html.apk-modern .month-cell .day-number{
+    font-size:15px!important;
+    line-height:1!important;
+    font-weight:500!important;
+    color:#dce9f2!important;
+    text-align:right!important;
+  }
+  html.apk-modern .month-cell.muted .day-number{color:#60788a!important;}
+  html.apk-modern .month-cell.holiday{
+    background:linear-gradient(180deg,rgba(46,28,30,.62),rgba(18,25,34,.92))!important;
+  }
+  html.apk-modern .month-cell.holiday .day-number{color:#f0aa3d!important;}
+  html.apk-modern .month-cell.today{
+    background:linear-gradient(145deg,rgba(13,84,139,.68),rgba(8,35,55,.96))!important;
+    box-shadow:inset 0 0 0 2px #1eb9ff!important;
+  }
+  html.apk-modern .month-cell.selected{
+    background:linear-gradient(145deg,rgba(11,104,198,.78),rgba(8,42,67,.98))!important;
+    box-shadow:inset 0 0 0 2px #1eb9ff!important;
+  }
+  html.apk-modern .day-icons{
+    gap:5px!important;
+    margin-top:10px!important;
+    align-content:flex-start!important;
+  }
+  html.apk-modern .task-dot{
+    width:28px!important;
+    height:28px!important;
+    min-width:28px!important;
+    border-radius:10px!important;
+    box-shadow:0 4px 11px rgba(0,0,0,.18)!important;
+  }
+  html.apk-modern .task-dot svg{width:13px!important;height:13px!important;}
+
+  html.apk-modern[data-theme="light"] .week-head,
+  html.apk-modern[data-theme="light"] .month-grid{
+    background:#fff!important;
+    border-color:#d7e5ee!important;
+  }
+  html.apk-modern[data-theme="light"] .week-head>div{
+    color:#60798b!important;
+    border-color:#d7e5ee!important;
+  }
+  html.apk-modern[data-theme="light"] .month-cell{
+    background:#fff!important;
+    border-color:#d7e5ee!important;
+    color:#2a4355!important;
+  }
+  html.apk-modern[data-theme="light"] .month-cell .day-number{color:#2f4657!important;}
+  html.apk-modern[data-theme="light"] .month-cell.muted .day-number{color:#99a9b5!important;}
+  html.apk-modern[data-theme="light"] .month-cell.holiday{background:#fff8ec!important;}
+  html.apk-modern[data-theme="light"] .month-cell.today,
+  html.apk-modern[data-theme="light"] .month-cell.selected{
+    background:#eaf7ff!important;
+  }
+
+  /* Calendar pickers */
+  html.apk-modern .calendar-month-picker,
+  html.apk-modern .calendar-week-picker{
+    width:min(310px,calc(100vw - 36px))!important;
+    padding:10px!important;
+    border:1px solid #1c4965!important;
+    border-radius:16px!important;
+    background:#091e2f!important;
+    box-shadow:0 20px 50px rgba(0,0,0,.42)!important;
+    color:#eaf7ff!important;
+    z-index:10000!important;
+  }
+  html.apk-modern .calendar-picker-month,
+  html.apk-modern .calendar-picker-year-chip,
+  html.apk-modern .week-picker-row{
+    color:#bcd0dd!important;
+    background:transparent!important;
+    border-radius:10px!important;
+  }
+  html.apk-modern .calendar-picker-month.active,
+  html.apk-modern .calendar-picker-year-chip.active,
+  html.apk-modern .week-picker-row.active{
+    color:#fff!important;
+    background:linear-gradient(135deg,#0879df,#15b9fa)!important;
+  }
+
+  /* Work cards / personal work / handover */
+  html.apk-modern .work-card,
+  html.apk-modern .mywork-shell article,
+  html.apk-modern .handover-card{
+    border:1px solid #173d58!important;
+    border-radius:16px!important;
+    background:linear-gradient(180deg,#0a1f2f,#081a28)!important;
+    box-shadow:0 10px 24px rgba(0,0,0,.14)!important;
+  }
+  html.apk-modern[data-theme="light"] .work-card,
+  html.apk-modern[data-theme="light"] .mywork-shell article,
+  html.apk-modern[data-theme="light"] .handover-card{
+    background:#fff!important;
+    border-color:#d8e5ee!important;
+  }
+  html.apk-modern .mywork-mobile-tabs{
+    padding:4px!important;
+    border:1px solid #173d58!important;
+    border-radius:15px!important;
+    background:#081b2a!important;
+  }
+  html.apk-modern .mywork-mobile-tabs button{
+    min-height:42px!important;
+    border-radius:11px!important;
+  }
+  html.apk-modern .handover-new-btn{
+    min-height:42px!important;
+    height:42px!important;
+    width:auto!important;
+    max-width:none!important;
+    padding:0 14px!important;
+    border-radius:13px!important;
+    font-size:11px!important;
+    white-space:nowrap!important;
+  }
+
+  /* Task legend */
+  html.apk-modern .status-task-legend,
+  html.apk-modern .task-legend{
+    border:1px solid #173d58!important;
+    border-radius:16px!important;
+    background:#081b2a!important;
+    box-shadow:none!important;
+  }
+  html.apk-modern[data-theme="light"] .status-task-legend,
+  html.apk-modern[data-theme="light"] .task-legend{
+    background:#fff!important;
+    border-color:#d8e5ee!important;
+  }
+
+  /* Mobile bottom navigation */
+  html.apk-modern .mobile-bottom-nav{
+    left:16px!important;
+    right:16px!important;
+    bottom:12px!important;
+    height:76px!important;
+    padding:6px!important;
+    border:1px solid #173d58!important;
+    border-radius:20px!important;
+    background:rgba(7,25,39,.95)!important;
+    box-shadow:0 18px 42px rgba(0,0,0,.30)!important;
+    backdrop-filter:blur(20px)!important;
+    -webkit-backdrop-filter:blur(20px)!important;
+  }
+  html.apk-modern .mobile-bottom-nav button{
+    border-radius:15px!important;
+    color:#8ea6b7!important;
+    gap:4px!important;
+  }
+  html.apk-modern .mobile-bottom-nav button.active{
+    color:#61d0ff!important;
+    background:linear-gradient(145deg,rgba(15,76,116,.88),rgba(10,49,75,.94))!important;
+    box-shadow:inset 0 0 0 1px rgba(38,181,239,.08)!important;
+  }
+  html.apk-modern .mobile-nav-icon{width:28px!important;height:28px!important;}
+  html.apk-modern .mobile-nav-icon svg{width:25px!important;height:25px!important;}
+  html.apk-modern .mobile-nav-label{
+    font-size:8.5px!important;
+    font-weight:650!important;
+    color:inherit!important;
+  }
+  html.apk-modern[data-theme="light"] .mobile-bottom-nav{
+    background:rgba(255,255,255,.96)!important;
+    border-color:#d5e4ee!important;
+    box-shadow:0 16px 36px rgba(31,65,91,.14)!important;
+  }
+  html.apk-modern[data-theme="light"] .mobile-bottom-nav button.active{
+    background:#eaf7ff!important;
+    color:#0874b0!important;
+  }
+
+  /* More sheet / dialogs */
+  html.apk-modern .mobile-more-sheet{
+    border:1px solid #173d58!important;
+    border-radius:24px 24px 0 0!important;
+    background:#071a29!important;
+    color:#eaf6fd!important;
+    box-shadow:0 -20px 60px rgba(0,0,0,.42)!important;
+  }
+  html.apk-modern .mobile-more-sheet-head,
+  html.apk-modern .mobile-more-account,
+  html.apk-modern .mobile-more-links button{
+    border-color:#173d58!important;
+  }
+  html.apk-modern .mobile-more-links button,
+  html.apk-modern .mobile-more-settings button{
+    background:#0a2031!important;
+    color:#a9c0d0!important;
+    border:1px solid #173d58!important;
+    border-radius:15px!important;
+  }
+  html.apk-modern .mobile-more-links button.active{
+    background:#103552!important;
+    color:#67d1ff!important;
+    border-color:#1d5577!important;
+  }
+  html.apk-modern dialog.modal,
+  html.apk-modern .notification-panel{
+    background:#081c2b!important;
+    border:1px solid #1a425d!important;
+    color:#eaf7ff!important;
+    border-radius:18px!important;
+    box-shadow:0 24px 70px rgba(0,0,0,.48)!important;
+  }
+  html.apk-modern[data-theme="light"] dialog.modal,
+  html.apk-modern[data-theme="light"] .notification-panel,
+  html.apk-modern[data-theme="light"] .mobile-more-sheet{
+    background:#fff!important;
+    color:#243b4c!important;
+    border-color:#d5e4ee!important;
+  }
+
+  /* Compact statistics / filters */
+  html.apk-modern .kpi,
+  html.apk-modern .filters,
+  html.apk-modern .audit-filters,
+  html.apk-modern .people-filters{
+    border-color:#173d58!important;
+    background:#0a1e2e!important;
+    border-radius:14px!important;
+    box-shadow:none!important;
+  }
+  html.apk-modern[data-theme="light"] .kpi,
+  html.apk-modern[data-theme="light"] .filters,
+  html.apk-modern[data-theme="light"] .audit-filters,
+  html.apk-modern[data-theme="light"] .people-filters{
+    background:#fff!important;
+    border-color:#d8e5ee!important;
+  }
+
+  /* Scrollbars and selection */
+  html.apk-modern *{scrollbar-width:thin;scrollbar-color:#1a4f70 transparent;}
+  html.apk-modern ::selection{background:#168bc7;color:#fff;}
+}
+
+@media (max-width:430px){
+  html.apk-modern .content{padding-left:14px!important;padding-right:14px!important;}
+  html.apk-modern .topbar{padding-left:14px!important;padding-right:14px!important;}
+  html.apk-modern .page-context strong{font-size:18px!important;}
+  html.apk-modern .page-context:after{font-size:9px!important;}
+  html.apk-modern .topbar .global-new-task-fab,
+  html.apk-modern .topbar .top-user>div:first-child,
+  html.apk-modern .topbar .icon-button{
+    width:44px!important;height:44px!important;min-width:44px!important;
+  }
+  html.apk-modern .mobile-top-lang-btn{height:44px!important;min-width:76px!important;}
+  html.apk-modern .month-cell{height:100px!important;min-height:100px!important;padding:8px 5px!important;}
+  html.apk-modern .month-cell .day-number{font-size:14px!important;}
+  html.apk-modern .task-dot{width:26px!important;height:26px!important;min-width:26px!important;}
+}
