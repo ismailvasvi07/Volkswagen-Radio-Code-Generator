@@ -214,7 +214,7 @@ public class MainActivity extends Activity {
     }
 
     private void injectModernDesign() {
-        String css = readAssetText("alcomet-modern.css");
+        String css = readAssetText("alcomet-modern.css") + "\n" + readAssetText("alcomet-retouch.css");
         if (css.isEmpty()) return;
         String js = "(function(){"
                 + "document.documentElement.classList.add('apk-modern');"
