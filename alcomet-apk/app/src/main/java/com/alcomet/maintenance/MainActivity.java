@@ -8,11 +8,13 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.text.InputType;
 import android.view.Gravity;
 import android.view.View;
+import android.view.WindowInsets;
 import android.view.ViewGroup;
 import android.webkit.CookieManager;
 import android.webkit.DownloadListener;
@@ -60,6 +62,21 @@ public class MainActivity extends Activity {
         pp.gravity = Gravity.TOP;
         root.addView(progress, pp);
         setContentView(root);
+
+        // Android 15+ enforces edge-to-edge for targetSdk 35.
+        // Keep the whole web UI below the phone status bar so the app header
+        // never overlaps the clock, signal, Wi-Fi or battery icons.
+        root.setOnApplyWindowInsetsListener((v, insets) -> {
+            int topInset;
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+                topInset = insets.getInsets(WindowInsets.Type.statusBars()).top;
+            } else {
+                topInset = insets.getSystemWindowInsetTop();
+            }
+            v.setPadding(0, topInset, 0, 0);
+            return insets;
+        });
+        root.requestApplyInsets();
 
         configureWebView();
         currentServer = normalizeServer(prefs.getString(KEY_SERVER, ""));
