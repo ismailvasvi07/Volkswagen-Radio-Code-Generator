@@ -34,6 +34,12 @@ import android.widget.FrameLayout;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import org.json.JSONObject;
+
+import java.io.ByteArrayOutputStream;
+import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
+
 public class MainActivity extends Activity {
     private static final String PREFS = "alcomet_mobile";
     private static final String KEY_SERVER = "server_url";
@@ -142,6 +148,7 @@ public class MainActivity extends Activity {
                 connectionDialogVisible = false;
                 progress.setVisibility(View.GONE);
                 injectAndroidEnhancements();
+                injectModernDesign();
             }
 
             @Override
@@ -192,6 +199,31 @@ public class MainActivity extends Activity {
             showServerDialog(false);
             return true;
         });
+    }
+
+    private String readAssetText(String name) {
+        try (InputStream in = getAssets().open(name);
+             ByteArrayOutputStream out = new ByteArrayOutputStream()) {
+            byte[] buffer = new byte[8192];
+            int n;
+            while ((n = in.read(buffer)) > 0) out.write(buffer, 0, n);
+            return out.toString(StandardCharsets.UTF_8.name());
+        } catch (Exception e) {
+            return "";
+        }
+    }
+
+    private void injectModernDesign() {
+        String css = readAssetText("alcomet-modern.css");
+        if (css.isEmpty()) return;
+        String js = "(function(){"
+                + "document.documentElement.classList.add('apk-modern');"
+                + "document.body&&document.body.classList.add('apk-modern-body');"
+                + "var old=document.getElementById('alcomet-modern-apk-style');if(old)old.remove();"
+                + "var s=document.createElement('style');s.id='alcomet-modern-apk-style';"
+                + "s.textContent=" + JSONObject.quote(css) + ";document.head.appendChild(s);"
+                + "})();";
+        webView.evaluateJavascript(js, null);
     }
 
     private void injectAndroidEnhancements() {
