@@ -1325,3 +1325,40 @@
     justify-self:start!important;
   }
 }
+
+
+/* v2.0.10 - compact dynamic week rows; hide inline week-number label */
+@media (max-width:900px){
+  html.apk-modern .week-strip .week-number,
+  html.apk-modern .week-strip .week-label,
+  html.apk-modern .week-strip [class*="week-number"],
+  html.apk-modern .week-strip [class*="week-label"]{
+    display:none!important;
+  }
+  html.apk-modern .week-strip.apk-week-empty .week-day{
+    height:72px!important;
+    min-height:72px!important;
+  }
+  html.apk-modern .week-strip.apk-week-low .week-day{
+    height:88px!important;
+    min-height:88px!important;
+  }
+  html.apk-modern .week-strip.apk-week-busy .week-day{
+    height:108px!important;
+    min-height:108px!important;
+  }
+}
+@media (max-width:430px){
+  html.apk-modern .week-strip.apk-week-empty .week-day{
+    height:68px!important;
+    min-height:68px!important;
+  }
+  html.apk-modern .week-strip.apk-week-low .week-day{
+    height:84px!important;
+    min-height:84px!important;
+  }
+  html.apk-modern .week-strip.apk-week-busy .week-day{
+    height:104px!important;
+    min-height:104px!important;
+  }
+}
