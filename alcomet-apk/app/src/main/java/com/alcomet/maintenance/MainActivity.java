@@ -163,6 +163,7 @@ public class MainActivity extends Activity {
                 injectCalendarCompactCount();
                 injectRememberMe();
                 injectNotificationReliabilityFix();
+                injectWorkshopDropdown();
             }
 
             @Override
@@ -474,6 +475,63 @@ public class MainActivity extends Activity {
                 + "e.preventDefault();e.stopPropagation();"
                 + "try{setNotificationPanel(!document.body.classList.contains('mobile-notification-open'));}catch(err){}"
                 + "},false);"
+                + "})();";
+        webView.evaluateJavascript(js, null);
+    }
+
+    private void injectWorkshopDropdown() {
+        String js = "(function(){"
+                + "function buildWorkshopSelect(){"
+                + "var filter=document.querySelector('.calendar-workshop-filter');"
+                + "if(!filter)return;"
+                + "var options=filter.querySelector('.calendar-workshop-options');"
+                + "if(!options)return;"
+                + "var chips=Array.prototype.slice.call(options.querySelectorAll('.workshop-filter-chip'));"
+                + "var allBtn=options.querySelector('.workshop-filter-all');"
+                + "if(!chips.length&&!allBtn)return;"
+                + "var wrap=filter.querySelector('.apk-workshop-select-wrap');"
+                + "if(!wrap){wrap=document.createElement('div');wrap.className='apk-workshop-select-wrap';"
+                + "var sel=document.createElement('select');sel.className='apk-workshop-select';"
+                + "wrap.appendChild(sel);filter.insertBefore(wrap,options);"
+                + "sel.addEventListener('change',function(){"
+                + "var val=this.value;"
+                + "var currentOptions=filter.querySelector('.calendar-workshop-options');if(!currentOptions)return;"
+                + "var currentAll=currentOptions.querySelector('.workshop-filter-all');"
+                + "var currentChips=Array.prototype.slice.call(currentOptions.querySelectorAll('.workshop-filter-chip'));"
+                + "if(val==='all'){if(currentAll&&!currentAll.classList.contains('active'))currentAll.click();return;}"
+                + "var idx=parseInt(val,10);var target=currentChips[idx];if(!target)return;"
+                + "if(currentAll&&currentAll.classList.contains('active'))currentAll.click();"
+                + "currentChips.forEach(function(ch,i){var inp=ch.querySelector('input');if(i!==idx&&inp&&inp.checked)ch.click();});"
+                + "var ti=target.querySelector('input');if(!ti||!ti.checked)target.click();"
+                + "setTimeout(syncWorkshopSelect,60);"
+                + "});"
+                + "}"
+                + "var sel=wrap.querySelector('select');if(!sel)return;"
+                + "var sig=(allBtn?(allBtn.textContent||''):'')+'|'+chips.map(function(ch){return(ch.textContent||'').trim();}).join('|');"
+                + "if(sel.dataset.sig!==sig){"
+                + "sel.innerHTML='';"
+                + "var ao=document.createElement('option');ao.value='all';ao.textContent=(allBtn&&(allBtn.textContent||'').trim())||'Всички цехове';sel.appendChild(ao);"
+                + "chips.forEach(function(ch,i){var o=document.createElement('option');o.value=String(i);o.textContent=(ch.textContent||'').trim();sel.appendChild(o);});"
+                + "sel.dataset.sig=sig;"
+                + "}"
+                + "syncWorkshopSelect();"
+                + "}"
+                + "function syncWorkshopSelect(){"
+                + "var filter=document.querySelector('.calendar-workshop-filter');if(!filter)return;"
+                + "var options=filter.querySelector('.calendar-workshop-options');var sel=filter.querySelector('.apk-workshop-select');"
+                + "if(!options||!sel)return;"
+                + "var allBtn=options.querySelector('.workshop-filter-all');"
+                + "var chips=Array.prototype.slice.call(options.querySelectorAll('.workshop-filter-chip'));"
+                + "if(allBtn&&allBtn.classList.contains('active')){sel.value='all';return;}"
+                + "var idx=chips.findIndex(function(ch){var inp=ch.querySelector('input');return !!(inp&&inp.checked);});"
+                + "sel.value=idx>=0?String(idx):'all';"
+                + "}"
+                + "buildWorkshopSelect();"
+                + "if(!window.__alcometWorkshopDropdownObserver){"
+                + "var t=null;window.__alcometWorkshopDropdownObserver=new MutationObserver(function(){clearTimeout(t);t=setTimeout(buildWorkshopSelect,40);});"
+                + "window.__alcometWorkshopDropdownObserver.observe(document.body,{childList:true,subtree:true,attributes:true,attributeFilter:['class','checked']});"
+                + "window.__alcometWorkshopDropdownTimer=setInterval(buildWorkshopSelect,1000);"
+                + "}"
                 + "})();";
         webView.evaluateJavascript(js, null);
     }
