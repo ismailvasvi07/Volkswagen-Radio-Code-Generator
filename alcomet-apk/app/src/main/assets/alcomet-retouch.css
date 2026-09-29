@@ -765,3 +765,76 @@
   html.apk-modern .page-context:after{font-size:7.4px!important}
   html.apk-modern .mobile-top-lang-btn{min-width:58px!important;padding:0 7px!important}
 }
+
+
+/* v2.0.4 - light button contrast + remove language caret */
+@media (max-width:900px){
+  /* Remove the small language dropdown arrow from the top bar. */
+  html.apk-modern .mobile-top-lang-btn::after,
+  html.apk-modern .mobile-top-lang-caret,
+  html.apk-modern .mobile-top-lang-chevron,
+  html.apk-modern .mobile-top-lang-arrow,
+  html.apk-modern .lang-caret,
+  html.apk-modern .lang-chevron,
+  html.apk-modern .chevron,
+  html.apk-modern .caret{
+    display:none!important;
+  }
+
+  /* Guarantee readable text on every light-theme button. */
+  html.apk-modern[data-theme="light"] button,
+  html.apk-modern[data-theme="light"] .btn,
+  html.apk-modern[data-theme="light"] [role="button"]{
+    color:#345266!important;
+  }
+  html.apk-modern[data-theme="light"] button *,
+  html.apk-modern[data-theme="light"] .btn *,
+  html.apk-modern[data-theme="light"] [role="button"] *{
+    color:inherit!important;
+  }
+
+  /* Primary actions stay blue with white text. */
+  html.apk-modern[data-theme="light"] .global-new-task-fab,
+  html.apk-modern[data-theme="light"] #newHandoverBtn,
+  html.apk-modern[data-theme="light"] .handover-new-btn,
+  html.apk-modern[data-theme="light"] .btn.primary,
+  html.apk-modern[data-theme="light"] .btn.success,
+  html.apk-modern[data-theme="light"] button.primary,
+  html.apk-modern[data-theme="light"] button.success,
+  html.apk-modern[data-theme="light"] .view-toggle button.active{
+    background:linear-gradient(135deg,#0b83e6,#16b8f6)!important;
+    border-color:#27bdf5!important;
+    color:#ffffff!important;
+    box-shadow:0 7px 18px rgba(0,139,221,.16)!important;
+  }
+  html.apk-modern[data-theme="light"] .global-new-task-fab *,
+  html.apk-modern[data-theme="light"] #newHandoverBtn *,
+  html.apk-modern[data-theme="light"] .handover-new-btn *,
+  html.apk-modern[data-theme="light"] .btn.primary *,
+  html.apk-modern[data-theme="light"] .btn.success *,
+  html.apk-modern[data-theme="light"] button.primary *,
+  html.apk-modern[data-theme="light"] button.success *,
+  html.apk-modern[data-theme="light"] .view-toggle button.active *{
+    color:#ffffff!important;
+  }
+
+  /* Empty-state action buttons must never disappear on white cards. */
+  html.apk-modern[data-theme="light"] .empty-state button,
+  html.apk-modern[data-theme="light"] .empty-state .btn,
+  html.apk-modern[data-theme="light"] .calendar-empty button,
+  html.apk-modern[data-theme="light"] .calendar-empty .btn,
+  html.apk-modern[data-theme="light"] .no-tasks button,
+  html.apk-modern[data-theme="light"] .no-tasks .btn,
+  html.apk-modern[data-theme="light"] .mobile-week-board button,
+  html.apk-modern[data-theme="light"] .selected-day-tasks button{
+    color:#2f5166!important;
+    background:#ffffff!important;
+    border-color:#cfe0ea!important;
+  }
+
+  html.apk-modern[data-theme="light"] .mobile-top-lang-btn{
+    min-width:54px!important;
+    padding:0 8px!important;
+    gap:4px!important;
+  }
+}
