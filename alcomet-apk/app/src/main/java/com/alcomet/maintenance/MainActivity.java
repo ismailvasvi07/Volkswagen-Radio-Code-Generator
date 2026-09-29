@@ -12,7 +12,10 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
+import android.security.keystore.KeyGenParameterSpec;
+import android.security.keystore.KeyProperties;
 import android.text.InputType;
+import android.util.Base64;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
@@ -39,10 +42,18 @@ import org.json.JSONObject;
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
+import java.security.KeyStore;
+
+import javax.crypto.Cipher;
+import javax.crypto.KeyGenerator;
+import javax.crypto.SecretKey;
+import javax.crypto.spec.GCMParameterSpec;
 
 public class MainActivity extends Activity {
     private static final String PREFS = "alcomet_mobile";
     private static final String KEY_SERVER = "server_url";
+    private static final String KEY_CREDENTIAL_BLOB = "remember_credentials_blob";
+    private static final String CREDENTIAL_KEY_ALIAS = "alcomet_maintenance_credentials_v1";
     private static final int FILE_CHOOSER_REQ = 1201;
 
     private WebView webView;
@@ -149,6 +160,8 @@ public class MainActivity extends Activity {
                 progress.setVisibility(View.GONE);
                 injectAndroidEnhancements();
                 injectModernDesign();
+                injectCalendarCompactCount();
+                injectRememberMe();
             }
 
             @Override
@@ -325,6 +338,127 @@ public class MainActivity extends Activity {
         webView.evaluateJavascript(js, null);
     }
 
+
+    private void injectCalendarCompactCount() {
+        String js = "(function(){"
+                + "function compact(){"
+                + "document.querySelectorAll('.month-cell .day-icons').forEach(function(box){"
+                + "box.querySelectorAll('.apk-more-tasks').forEach(function(n){n.remove();});"
+                + "var items=Array.prototype.slice.call(box.querySelectorAll('.task-dot'));"
+                + "items.forEach(function(n){n.style.display='';});"
+                + "if(items.length<=5)return;"
+                + "for(var i=5;i<items.length;i++)items[i].style.display='none';"
+                + "var more=document.createElement('span');more.className='apk-more-tasks';"
+                + "more.textContent='+'+(items.length-5);more.title='Още '+(items.length-5)+' задачи';"
+                + "box.appendChild(more);"
+                + "});"
+                + "}"
+                + "compact();"
+                + "if(!window.__alcometCompactObserver){"
+                + "var t=null;window.__alcometCompactObserver=new MutationObserver(function(){clearTimeout(t);t=setTimeout(compact,30);});"
+                + "window.__alcometCompactObserver.observe(document.body,{childList:true,subtree:true});"
+                + "}"
+                + "})();";
+        webView.evaluateJavascript(js, null);
+    }
+
+    private SecretKey getOrCreateCredentialKey() throws Exception {
+        KeyStore keyStore = KeyStore.getInstance("AndroidKeyStore");
+        keyStore.load(null);
+        if (keyStore.containsAlias(CREDENTIAL_KEY_ALIAS)) {
+            KeyStore.SecretKeyEntry entry = (KeyStore.SecretKeyEntry) keyStore.getEntry(CREDENTIAL_KEY_ALIAS, null);
+            return entry.getSecretKey();
+        }
+        KeyGenerator keyGenerator = KeyGenerator.getInstance(KeyProperties.KEY_ALGORITHM_AES, "AndroidKeyStore");
+        keyGenerator.init(new KeyGenParameterSpec.Builder(
+                CREDENTIAL_KEY_ALIAS,
+                KeyProperties.PURPOSE_ENCRYPT | KeyProperties.PURPOSE_DECRYPT)
+                .setBlockModes(KeyProperties.BLOCK_MODE_GCM)
+                .setEncryptionPaddings(KeyProperties.ENCRYPTION_PADDING_NONE)
+                .setKeySize(256)
+                .build());
+        return keyGenerator.generateKey();
+    }
+
+    private void saveCredentialsSecure(String username, String password) {
+        try {
+            JSONObject payload = new JSONObject();
+            payload.put("username", username == null ? "" : username);
+            payload.put("password", password == null ? "" : password);
+
+            Cipher cipher = Cipher.getInstance("AES/GCM/NoPadding");
+            cipher.init(Cipher.ENCRYPT_MODE, getOrCreateCredentialKey());
+            byte[] iv = cipher.getIV();
+            byte[] encrypted = cipher.doFinal(payload.toString().getBytes(StandardCharsets.UTF_8));
+            String blob = Base64.encodeToString(iv, Base64.NO_WRAP)
+                    + "."
+                    + Base64.encodeToString(encrypted, Base64.NO_WRAP);
+            prefs.edit().putString(KEY_CREDENTIAL_BLOB, blob).apply();
+        } catch (Exception e) {
+            prefs.edit().remove(KEY_CREDENTIAL_BLOB).apply();
+        }
+    }
+
+    private String loadCredentialsSecure() {
+        try {
+            String blob = prefs.getString(KEY_CREDENTIAL_BLOB, "");
+            if (blob == null || blob.isEmpty() || !blob.contains(".")) return "{}";
+            String[] parts = blob.split("\\.", 2);
+            byte[] iv = Base64.decode(parts[0], Base64.NO_WRAP);
+            byte[] encrypted = Base64.decode(parts[1], Base64.NO_WRAP);
+
+            Cipher cipher = Cipher.getInstance("AES/GCM/NoPadding");
+            cipher.init(Cipher.DECRYPT_MODE, getOrCreateCredentialKey(), new GCMParameterSpec(128, iv));
+            byte[] plain = cipher.doFinal(encrypted);
+            JSONObject payload = new JSONObject(new String(plain, StandardCharsets.UTF_8));
+            payload.put("remember", true);
+            return payload.toString();
+        } catch (Exception e) {
+            prefs.edit().remove(KEY_CREDENTIAL_BLOB).apply();
+            return "{}";
+        }
+    }
+
+    private void clearCredentialsSecure() {
+        prefs.edit().remove(KEY_CREDENTIAL_BLOB).apply();
+    }
+
+    private void injectRememberMe() {
+        String js = "(function(){"
+                + "var form=document.getElementById('loginForm');if(!form)return;"
+                + "if(!document.getElementById('apkRememberRow')){"
+                + "var pass=document.getElementById('loginPass');"
+                + "var row=document.createElement('label');row.id='apkRememberRow';row.className='apk-remember-row';"
+                + "row.innerHTML='<span class=\\\"apk-remember-check\\\"><input id=\\\"apkRememberMe\\\" type=\\\"checkbox\\\"> <b>Запомни ме</b></span>';"
+                + "var pl=pass&&pass.closest('label');if(pl)pl.insertAdjacentElement('afterend',row);"
+                + "}"
+                + "var remember=document.getElementById('apkRememberMe');"
+                + "var user=document.getElementById('loginUser');var pass=document.getElementById('loginPass');"
+                + "var saved={};try{saved=JSON.parse(ALCOMETAndroid.getSavedCredentials()||'{}');}catch(e){}"
+                + "if(saved.remember){if(user)user.value=saved.username||'';if(pass)pass.value=saved.password||'';if(remember)remember.checked=true;}"
+                + "var pending=null;"
+                + "if(!form.__apkRememberBound){form.__apkRememberBound=true;"
+                + "form.addEventListener('submit',function(){"
+                + "var on=!!(remember&&remember.checked);"
+                + "pending={username:user?user.value:'',password:pass?pass.value:'',remember:on};"
+                + "if(!on){try{ALCOMETAndroid.clearSavedCredentials();}catch(e){}}"
+                + "},true);"
+                + "var app=document.getElementById('appView');if(app){"
+                + "new MutationObserver(function(){"
+                + "if(pending&&pending.remember&&!app.classList.contains('hidden')){"
+                + "try{ALCOMETAndroid.saveCredentials(pending.username,pending.password,true);}catch(e){}pending=null;"
+                + "}"
+                + "}).observe(app,{attributes:true,attributeFilter:['class']});"
+                + "}"
+                + "}"
+                + "if(saved.remember&&!window.__apkAutoLoginTried){window.__apkAutoLoginTried=true;"
+                + "setTimeout(function(){var lv=document.getElementById('loginView');"
+                + "if(lv&&!lv.classList.contains('hidden')&&form){if(form.requestSubmit)form.requestSubmit();else form.dispatchEvent(new Event('submit',{bubbles:true,cancelable:true}));}},450);"
+                + "}"
+                + "})();";
+        webView.evaluateJavascript(js, null);
+    }
+
     private void applySystemBars(boolean dark) {
         int bg = dark ? Color.rgb(7, 21, 35) : Color.rgb(250, 251, 252);
         if (rootView != null) rootView.setBackgroundColor(bg);
@@ -361,6 +495,22 @@ public class MainActivity extends Activity {
         @JavascriptInterface
         public void setDarkMode(final boolean dark) {
             runOnUiThread(() -> applySystemBars(dark));
+        }
+
+        @JavascriptInterface
+        public String getSavedCredentials() {
+            return loadCredentialsSecure();
+        }
+
+        @JavascriptInterface
+        public void saveCredentials(String username, String password, boolean remember) {
+            if (remember) saveCredentialsSecure(username, password);
+            else clearCredentialsSecure();
+        }
+
+        @JavascriptInterface
+        public void clearSavedCredentials() {
+            clearCredentialsSecure();
         }
     }
 
