@@ -7,11 +7,11 @@ android {
     compileSdk 35
 
     defaultConfig {
-        applicationId 'com.alcomet.maintenance'
+        applicationId 'com.alcomet.maintenance.stable'
         minSdk 26
         targetSdk 35
-        versionCode 9
-        versionName '1.1.3'
+        versionCode 1
+        versionName '2.0.0'
     }
 
     buildTypes {
