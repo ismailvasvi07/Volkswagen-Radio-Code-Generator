@@ -1304,3 +1304,24 @@
     max-height:17px!important;
   }
 }
+
+
+/* v2.0.10 - adaptive week row height and clean week cells */
+@media (max-width:900px){
+  html.apk-modern .week-strip{
+    transition:height .18s ease,min-height .18s ease!important;
+  }
+  html.apk-modern .week-strip .week-day{
+    transition:height .18s ease,min-height .18s ease!important;
+  }
+  html.apk-modern .week-strip.apk-week-empty .week-day .day-icons{
+    display:none!important;
+  }
+  html.apk-modern .week-strip .week-day .day-icons{
+    margin-top:4px!important;
+  }
+  html.apk-modern .week-strip .week-day .apk-week-more-tasks{
+    align-self:start!important;
+    justify-self:start!important;
+  }
+}
