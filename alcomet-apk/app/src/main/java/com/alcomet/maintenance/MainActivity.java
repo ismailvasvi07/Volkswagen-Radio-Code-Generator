@@ -162,6 +162,7 @@ public class MainActivity extends Activity {
                 injectModernDesign();
                 injectCalendarCompactCount();
                 injectRememberMe();
+                injectNotificationReliabilityFix();
             }
 
             @Override
@@ -459,6 +460,20 @@ public class MainActivity extends Activity {
                 + "setTimeout(function(){var lv=document.getElementById('loginView');"
                 + "if(lv&&!lv.classList.contains('hidden')&&form){if(form.requestSubmit)form.requestSubmit();else form.dispatchEvent(new Event('submit',{bubbles:true,cancelable:true}));}},450);"
                 + "}"
+                + "})();";
+        webView.evaluateJavascript(js, null);
+    }
+
+    private void injectNotificationReliabilityFix() {
+        String js = "(function(){"
+                + "var old=document.getElementById('notificationBtn');"
+                + "if(!old||old.__apkNotificationFixed)return;"
+                + "var b=old.cloneNode(true);b.__apkNotificationFixed=true;"
+                + "old.replaceWith(b);"
+                + "b.addEventListener('click',function(e){"
+                + "e.preventDefault();e.stopPropagation();"
+                + "try{setNotificationPanel(!document.body.classList.contains('mobile-notification-open'));}catch(err){}"
+                + "},false);"
                 + "})();";
         webView.evaluateJavascript(js, null);
     }
