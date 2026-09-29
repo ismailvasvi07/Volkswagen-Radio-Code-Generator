@@ -264,3 +264,69 @@
     min-width:20px!important;
   }
 }
+
+/* v1.1.3 calendar overflow count + remember-me */
+@media (max-width:900px){
+  html.apk-modern .day-icons .apk-more-tasks{
+    width:22px!important;
+    height:22px!important;
+    min-width:22px!important;
+    display:grid!important;
+    place-items:center!important;
+    border-radius:8px!important;
+    background:#123b57!important;
+    border:1px solid #255f83!important;
+    color:#8bdcff!important;
+    font-size:8.5px!important;
+    font-weight:800!important;
+    line-height:1!important;
+    box-shadow:0 3px 9px rgba(0,0,0,.18)!important;
+    pointer-events:none!important;
+  }
+  html.apk-modern[data-theme="light"] .day-icons .apk-more-tasks{
+    background:#eaf7ff!important;
+    border-color:#a8d8ef!important;
+    color:#0c719f!important;
+  }
+  html.apk-modern .apk-remember-row{
+    margin:2px 0 12px!important;
+    display:block!important;
+    color:var(--muted)!important;
+    font-size:11px!important;
+    font-weight:600!important;
+  }
+  html.apk-modern .apk-remember-check{
+    display:flex!important;
+    flex-direction:row!important;
+    align-items:center!important;
+    gap:8px!important;
+    width:max-content!important;
+    max-width:100%!important;
+  }
+  html.apk-modern .apk-remember-check input{
+    appearance:auto!important;
+    -webkit-appearance:checkbox!important;
+    width:18px!important;
+    min-width:18px!important;
+    height:18px!important;
+    min-height:18px!important;
+    margin:0!important;
+    padding:0!important;
+    border-radius:4px!important;
+    box-shadow:none!important;
+    accent-color:#16aff1!important;
+  }
+  html.apk-modern .apk-remember-check b{
+    color:var(--ink)!important;
+    font-size:11px!important;
+    font-weight:650!important;
+  }
+}
+@media (max-width:430px){
+  html.apk-modern .day-icons .apk-more-tasks{
+    width:20px!important;
+    height:20px!important;
+    min-width:20px!important;
+    font-size:8px!important;
+  }
+}
