@@ -1053,3 +1053,117 @@
     max-height:17px!important;
   }
 }
+
+
+/* v2.0.8 - week icon alignment, visible +N, restore left border */
+@media (max-width:900px){
+  html.apk-modern .week-strip{
+    border-left:1px solid #173d58!important;
+    border-right:1px solid #173d58!important;
+    border-bottom:1px solid #173d58!important;
+    border-radius:0 0 14px 14px!important;
+    overflow:hidden!important;
+  }
+  html.apk-modern[data-theme="light"] .week-strip{
+    border-color:#d7e5ee!important;
+  }
+
+  html.apk-modern .week-strip .week-day{
+    position:relative!important;
+    min-height:128px!important;
+    height:128px!important;
+    padding:6px 3px 8px!important;
+    border-right:1px solid #173d58!important;
+    border-bottom:0!important;
+    box-sizing:border-box!important;
+    overflow:hidden!important;
+  }
+  html.apk-modern .week-strip .week-day:last-child{
+    border-right:0!important;
+  }
+  html.apk-modern[data-theme="light"] .week-strip .week-day{
+    border-right-color:#d7e5ee!important;
+  }
+
+  html.apk-modern .week-strip .week-day .day-number{
+    min-height:16px!important;
+    height:16px!important;
+    line-height:16px!important;
+    margin:0 0 6px!important;
+    padding:0!important;
+  }
+
+  html.apk-modern .week-strip .week-day .day-icons{
+    display:grid!important;
+    grid-template-columns:repeat(2,18px)!important;
+    grid-auto-rows:18px!important;
+    justify-content:center!important;
+    align-content:start!important;
+    gap:4px!important;
+    width:44px!important;
+    max-width:44px!important;
+    height:auto!important;
+    min-height:40px!important;
+    max-height:62px!important;
+    margin:0 auto!important;
+    padding:0!important;
+    overflow:visible!important;
+    box-sizing:border-box!important;
+  }
+
+  html.apk-modern .week-strip .week-day .task-dot,
+  html.apk-modern .week-strip .week-day .apk-week-more-tasks{
+    position:static!important;
+    float:none!important;
+    flex:none!important;
+    display:grid!important;
+    place-items:center!important;
+    width:18px!important;
+    height:18px!important;
+    min-width:18px!important;
+    max-width:18px!important;
+    min-height:18px!important;
+    max-height:18px!important;
+    margin:0!important;
+    padding:0!important;
+    transform:none!important;
+    box-sizing:border-box!important;
+  }
+
+  html.apk-modern .week-strip .week-day .apk-week-more-tasks{
+    overflow:visible!important;
+    z-index:2!important;
+    font-size:7.5px!important;
+    line-height:18px!important;
+    text-align:center!important;
+    white-space:nowrap!important;
+  }
+}
+
+@media (max-width:430px){
+  html.apk-modern .week-strip .week-day{
+    min-height:122px!important;
+    height:122px!important;
+  }
+  html.apk-modern .week-strip .week-day .day-icons{
+    grid-template-columns:repeat(2,17px)!important;
+    grid-auto-rows:17px!important;
+    width:41px!important;
+    max-width:41px!important;
+    gap:3px!important;
+    max-height:58px!important;
+  }
+  html.apk-modern .week-strip .week-day .task-dot,
+  html.apk-modern .week-strip .week-day .apk-week-more-tasks{
+    width:17px!important;
+    height:17px!important;
+    min-width:17px!important;
+    max-width:17px!important;
+    min-height:17px!important;
+    max-height:17px!important;
+  }
+  html.apk-modern .week-strip .week-day .apk-week-more-tasks{
+    line-height:17px!important;
+    font-size:7px!important;
+  }
+}
