@@ -33,17 +33,20 @@ jobs:
         with:
           gradle-version: '8.9'
 
-      - name: Build APK
-        run: gradle -p alcomet-apk assembleDebug --stacktrace
+      - name: Build unsigned release APK
+        run: gradle -p alcomet-apk assembleRelease --stacktrace
 
-      - name: Prepare APK
+      - name: Prepare unsigned APK and signing tools
         run: |
-          mkdir -p apk-output
-          cp alcomet-apk/app/build/outputs/apk/debug/app-debug.apk apk-output/ALCOMET_Maintenance_v1.0.apk
+          mkdir -p apk-output/signing-tools/lib
+          cp alcomet-apk/app/build/outputs/apk/release/app-release-unsigned.apk apk-output/ALCOMET_Maintenance_unsigned.apk
+          cp "$ANDROID_HOME/build-tools/35.0.0/apksigner" apk-output/signing-tools/apksigner
+          cp "$ANDROID_HOME/build-tools/35.0.0/lib/apksigner.jar" apk-output/signing-tools/lib/apksigner.jar
+          chmod +x apk-output/signing-tools/apksigner
 
-      - name: Upload APK
+      - name: Upload unsigned package
         uses: actions/upload-artifact@v4
         with:
-          name: ALCOMET-Maintenance-APK
-          path: apk-output/ALCOMET_Maintenance_v1.0.apk
+          name: ALCOMET-Maintenance-Unsigned
+          path: apk-output
           if-no-files-found: error
