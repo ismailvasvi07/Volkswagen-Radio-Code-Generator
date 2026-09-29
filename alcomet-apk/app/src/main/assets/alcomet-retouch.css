@@ -838,3 +838,58 @@
     gap:4px!important;
   }
 }
+
+
+/* v2.0.5 - calendar icon clipping + clean notification badge */
+@media (max-width:900px){
+  /* Month cells: keep 4 visible task icons + counter, but force a safe 2-column layout. */
+  html.apk-modern .month-cell{
+    overflow:hidden!important;
+  }
+  html.apk-modern .month-cell .day-icons{
+    display:grid!important;
+    grid-template-columns:repeat(2,22px)!important;
+    grid-auto-rows:22px!important;
+    justify-content:start!important;
+    align-content:start!important;
+    gap:4px!important;
+    width:48px!important;
+    max-width:48px!important;
+    overflow:hidden!important;
+  }
+  html.apk-modern .month-cell .task-dot,
+  html.apk-modern .month-cell .apk-more-tasks{
+    width:22px!important;
+    height:22px!important;
+    min-width:22px!important;
+    max-width:22px!important;
+    margin:0!important;
+    overflow:hidden!important;
+  }
+
+  /* Notification count: no dark/black outline. */
+  html.apk-modern .notification-badge{
+    border:0!important;
+    outline:0!important;
+    box-shadow:0 2px 7px rgba(235,70,78,.24)!important;
+    background:#ef4d55!important;
+    color:#fff!important;
+  }
+}
+
+@media (max-width:430px){
+  html.apk-modern .month-cell .day-icons{
+    grid-template-columns:repeat(2,20px)!important;
+    grid-auto-rows:20px!important;
+    gap:3px!important;
+    width:43px!important;
+    max-width:43px!important;
+  }
+  html.apk-modern .month-cell .task-dot,
+  html.apk-modern .month-cell .apk-more-tasks{
+    width:20px!important;
+    height:20px!important;
+    min-width:20px!important;
+    max-width:20px!important;
+  }
+}
