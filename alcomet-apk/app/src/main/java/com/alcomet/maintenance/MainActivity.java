@@ -161,6 +161,7 @@ public class MainActivity extends Activity {
                 injectAndroidEnhancements();
                 injectModernDesign();
                 injectCalendarCompactCount();
+                injectWeekCompactCount();
                 injectRememberMe();
                 injectNotificationReliabilityFix();
                 injectWorkshopDropdown();
@@ -364,6 +365,30 @@ public class MainActivity extends Activity {
                 + "window.__alcometCompactObserver.observe(document.body,{childList:true,subtree:true});"
                 + "}"
                 + "if(!window.__alcometCompactTimer){window.__alcometCompactTimer=setInterval(compact,700);}"
+                + "})();";
+        webView.evaluateJavascript(js, null);
+    }
+
+    private void injectWeekCompactCount() {
+        String js = "(function(){"
+                + "function compactWeek(){"
+                + "document.querySelectorAll('.week-strip .week-day .day-icons').forEach(function(box){"
+                + "var items=Array.prototype.slice.call(box.querySelectorAll('.task-dot'));"
+                + "items.forEach(function(n,i){n.style.display=i<4?'':'none';});"
+                + "var hidden=Math.max(0,items.length-4);"
+                + "var more=box.querySelector('.apk-week-more-tasks');"
+                + "if(hidden>0){"
+                + "if(!more){more=document.createElement('span');more.className='apk-week-more-tasks';box.appendChild(more);}"
+                + "more.textContent='+'+hidden;more.title='Още '+hidden+' задачи';more.style.display='grid';"
+                + "}else if(more){more.remove();}"
+                + "});"
+                + "}"
+                + "compactWeek();"
+                + "if(!window.__alcometWeekCompactObserver){"
+                + "var t=null;window.__alcometWeekCompactObserver=new MutationObserver(function(){clearTimeout(t);t=setTimeout(compactWeek,25);});"
+                + "window.__alcometWeekCompactObserver.observe(document.body,{childList:true,subtree:true});"
+                + "window.__alcometWeekCompactTimer=setInterval(compactWeek,700);"
+                + "}"
                 + "})();";
         webView.evaluateJavascript(js, null);
     }
