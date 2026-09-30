@@ -284,6 +284,7 @@ public class MainActivity extends Activity {
                 injectRememberMe();
                 injectNotificationReliabilityFix();
                 injectWorkshopDropdown();
+                injectTaskIntegratedSelects();
                 injectTaskFileRemoval();
                 hideStartupSplash();
             }
@@ -691,6 +692,63 @@ public class MainActivity extends Activity {
                 + "var t=null;window.__alcometWorkshopDropdownObserver=new MutationObserver(function(){clearTimeout(t);t=setTimeout(buildWorkshopSelect,40);});"
                 + "window.__alcometWorkshopDropdownObserver.observe(document.body,{childList:true,subtree:true,attributes:true,attributeFilter:['class','checked']});"
                 + "window.__alcometWorkshopDropdownTimer=setInterval(buildWorkshopSelect,1000);"
+                + "}"
+                + "})();";
+        webView.evaluateJavascript(js, null);
+    }
+
+    private void injectTaskIntegratedSelects() {
+        String js = "(function(){"
+                + "function closeOthers(except){document.querySelectorAll('.apk-inline-select.open').forEach(function(w){if(w!==except)w.classList.remove('open');});}"
+                + "function optionSignature(sel){return Array.prototype.map.call(sel.options,function(o){return [o.value,o.text,o.disabled,o.selected].join('~');}).join('|');}"
+                + "function syncWrap(sel,wrap){"
+                + "var btn=wrap.querySelector('.apk-inline-select-button');if(!btn)return;"
+                + "var opt=sel.options[sel.selectedIndex];btn.querySelector('.apk-inline-select-value').textContent=opt?opt.text:'—';"
+                + "wrap.classList.toggle('disabled',!!sel.disabled);btn.disabled=!!sel.disabled;"
+                + "wrap.querySelectorAll('.apk-inline-select-option').forEach(function(b){b.classList.toggle('selected',b.dataset.value===String(sel.value));});"
+                + "}"
+                + "function rebuild(sel,wrap){"
+                + "var menu=wrap.querySelector('.apk-inline-select-menu');if(!menu)return;"
+                + "menu.innerHTML='';"
+                + "Array.prototype.forEach.call(sel.options,function(opt){"
+                + "var b=document.createElement('button');b.type='button';b.className='apk-inline-select-option';"
+                + "b.dataset.value=String(opt.value);b.disabled=!!opt.disabled;b.textContent=opt.text;"
+                + "if(opt.selected)b.classList.add('selected');"
+                + "b.addEventListener('click',function(e){"
+                + "e.preventDefault();e.stopPropagation();if(opt.disabled)return;"
+                + "sel.value=opt.value;"
+                + "sel.dispatchEvent(new Event('input',{bubbles:true}));"
+                + "sel.dispatchEvent(new Event('change',{bubbles:true}));"
+                + "wrap.classList.remove('open');"
+                + "setTimeout(function(){syncWrap(sel,wrap);bindAll();},20);"
+                + "});menu.appendChild(b);"
+                + "});"
+                + "wrap.dataset.sig=optionSignature(sel);syncWrap(sel,wrap);"
+                + "}"
+                + "function bindSelect(sel){"
+                + "if(!sel||sel.closest('.apk-inline-select'))return;"
+                + "var wrap=sel.__apkInlineWrap;"
+                + "if(!wrap||!wrap.isConnected){"
+                + "wrap=document.createElement('div');wrap.className='apk-inline-select';"
+                + "var btn=document.createElement('button');btn.type='button';btn.className='apk-inline-select-button';"
+                + "btn.innerHTML='<span class=\"apk-inline-select-value\"></span><span class=\"apk-inline-select-chevron\">⌄</span>';"
+                + "var menu=document.createElement('div');menu.className='apk-inline-select-menu';"
+                + "wrap.appendChild(btn);wrap.appendChild(menu);"
+                + "sel.parentNode.insertBefore(wrap,sel.nextSibling);sel.classList.add('apk-native-select-hidden');sel.__apkInlineWrap=wrap;"
+                + "btn.addEventListener('click',function(e){e.preventDefault();e.stopPropagation();if(sel.disabled)return;var will=!wrap.classList.contains('open');closeOthers(wrap);wrap.classList.toggle('open',will);});"
+                + "sel.addEventListener('change',function(){setTimeout(function(){syncWrap(sel,wrap);},0);});"
+                + "}"
+                + "var sig=optionSignature(sel);if(wrap.dataset.sig!==sig)rebuild(sel,wrap);else syncWrap(sel,wrap);"
+                + "}"
+                + "function bindAll(){"
+                + "document.querySelectorAll('dialog.task-create-modal select,.task-create-modal select').forEach(bindSelect);"
+                + "}"
+                + "bindAll();"
+                + "if(!window.__alcometTaskSelectObserver){"
+                + "var t=null;window.__alcometTaskSelectObserver=new MutationObserver(function(){clearTimeout(t);t=setTimeout(bindAll,35);});"
+                + "window.__alcometTaskSelectObserver.observe(document.body,{childList:true,subtree:true,attributes:true,attributeFilter:['disabled','value']});"
+                + "document.addEventListener('click',function(e){if(!e.target.closest('.apk-inline-select'))closeOthers(null);},true);"
+                + "window.__alcometTaskSelectTimer=setInterval(bindAll,900);"
                 + "}"
                 + "})();";
         webView.evaluateJavascript(js, null);
