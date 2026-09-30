@@ -2131,3 +2131,85 @@
     max-height:none!important;
   }
 }
+
+
+/* v2.0.18 - scroll the complete New Task dialog, never an inner fragment */
+@media (max-width:900px){
+  html.apk-modern dialog.modal.task-create-modal[open]{
+    position:fixed!important;
+    inset:6px!important;
+    left:6px!important;
+    right:6px!important;
+    top:6px!important;
+    bottom:6px!important;
+    width:auto!important;
+    height:calc(100dvh - 12px)!important;
+    min-height:0!important;
+    max-height:calc(100dvh - 12px)!important;
+    margin:0!important;
+    padding:0!important;
+    transform:none!important;
+    display:block!important;
+    overflow-x:hidden!important;
+    overflow-y:auto!important;
+    overscroll-behavior-y:contain!important;
+    touch-action:pan-y!important;
+    -webkit-overflow-scrolling:touch!important;
+    box-sizing:border-box!important;
+  }
+
+  html.apk-modern dialog.modal.task-create-modal[open] > #modalBody,
+  html.apk-modern dialog.modal.task-create-modal[open] .task-create-card,
+  html.apk-modern dialog.modal.task-create-modal[open] .task-create-content,
+  html.apk-modern dialog.modal.task-create-modal[open] .task-create-actions,
+  html.apk-modern dialog.modal.task-create-modal[open] .apk-task-modal-scroll,
+  html.apk-modern dialog.modal.task-create-modal[open] .apk-task-modal-scroll-body,
+  html.apk-modern dialog.modal.task-create-modal[open] .apk-task-modal-form,
+  html.apk-modern dialog.modal.task-create-modal[open] .apk-task-modal-autoheight,
+  html.apk-modern dialog.modal.task-create-modal[open] .apk-task-modal-autoheight-child{
+    position:static!important;
+    inset:auto!important;
+    display:block!important;
+    width:100%!important;
+    height:auto!important;
+    min-height:0!important;
+    max-height:none!important;
+    margin:0!important;
+    transform:none!important;
+    overflow:visible!important;
+    flex:none!important;
+    touch-action:auto!important;
+    box-sizing:border-box!important;
+  }
+
+  html.apk-modern dialog.modal.task-create-modal[open] .task-create-card{
+    padding-bottom:14px!important;
+  }
+
+  html.apk-modern dialog.modal.task-create-modal[open] .task-create-head{
+    position:sticky!important;
+    top:0!important;
+    z-index:20!important;
+    flex:none!important;
+  }
+
+  html.apk-modern dialog.modal.task-create-modal[open] .task-create-actions{
+    margin-top:10px!important;
+    padding-bottom:12px!important;
+  }
+
+  html.apk-modern dialog.modal.task-create-modal[open] form,
+  html.apk-modern dialog.modal.task-create-modal[open] fieldset,
+  html.apk-modern dialog.modal.task-create-modal[open] section,
+  html.apk-modern dialog.modal.task-create-modal[open] .modal-content,
+  html.apk-modern dialog.modal.task-create-modal[open] .modal-body{
+    height:auto!important;
+    min-height:0!important;
+    max-height:none!important;
+    overflow:visible!important;
+  }
+
+  html.apk-modern dialog.modal.task-create-modal[open] #taskFileList{
+    overflow:visible!important;
+  }
+}
