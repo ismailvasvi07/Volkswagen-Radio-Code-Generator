@@ -35,7 +35,6 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.EditText;
 import android.widget.FrameLayout;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -120,24 +119,17 @@ public class MainActivity extends Activity {
         box.setGravity(Gravity.CENTER);
         box.setPadding(dp(24), dp(24), dp(24), dp(24));
 
-        ImageView logo = new ImageView(this);
-        logo.setImageResource(com.alcomet.maintenance.R.mipmap.ic_launcher);
-        logo.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
-        LinearLayout.LayoutParams logoParams = new LinearLayout.LayoutParams(dp(92), dp(92));
+        TextView logo = new TextView(this);
+        logo.setText("ALC⚙MET");
+        logo.setTextColor(Color.rgb(16, 153, 217));
+        logo.setTextSize(30);
+        logo.setGravity(Gravity.CENTER);
+        logo.setTypeface(android.graphics.Typeface.DEFAULT_BOLD);
+        logo.setLetterSpacing(0.03f);
+        LinearLayout.LayoutParams logoParams = new LinearLayout.LayoutParams(
+                ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         logoParams.gravity = Gravity.CENTER_HORIZONTAL;
         box.addView(logo, logoParams);
-
-        TextView title = new TextView(this);
-        title.setText("ALCOMET");
-        title.setTextColor(Color.rgb(29, 58, 78));
-        title.setTextSize(22);
-        title.setGravity(Gravity.CENTER);
-        title.setTypeface(android.graphics.Typeface.DEFAULT_BOLD);
-        LinearLayout.LayoutParams titleParams = new LinearLayout.LayoutParams(
-                ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-        titleParams.gravity = Gravity.CENTER_HORIZONTAL;
-        titleParams.topMargin = dp(10);
-        box.addView(title, titleParams);
 
         TextView sub = new TextView(this);
         sub.setText("Maintenance");
