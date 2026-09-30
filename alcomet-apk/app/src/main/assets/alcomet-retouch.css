@@ -1362,3 +1362,67 @@
     min-height:104px!important;
   }
 }
+
+
+/* v2.0.11 - equal spacing for topbar action buttons */
+@media (max-width:900px){
+  html.apk-modern .topbar{
+    display:flex!important;
+    align-items:center!important;
+  }
+  html.apk-modern .topbar-left{
+    flex:1 1 auto!important;
+    min-width:0!important;
+  }
+  html.apk-modern .topbar-right{
+    display:grid!important;
+    grid-auto-flow:column!important;
+    grid-auto-columns:max-content!important;
+    align-items:center!important;
+    justify-content:end!important;
+    column-gap:8px!important;
+    row-gap:0!important;
+    margin-left:10px!important;
+    padding:0!important;
+  }
+
+  html.apk-modern .topbar .global-new-task-fab,
+  html.apk-modern .mobile-top-lang-btn,
+  html.apk-modern .topbar .top-user,
+  html.apk-modern .topbar .top-user>div:first-child,
+  html.apk-modern .notification-wrap,
+  html.apk-modern .topbar .icon-button{
+    margin:0!important;
+  }
+
+  html.apk-modern .topbar .global-new-task-fab,
+  html.apk-modern .topbar .top-user>div:first-child,
+  html.apk-modern .notification-wrap,
+  html.apk-modern .topbar .icon-button{
+    width:40px!important;
+    min-width:40px!important;
+    max-width:40px!important;
+    height:40px!important;
+    min-height:40px!important;
+    max-height:40px!important;
+  }
+
+  html.apk-modern .mobile-top-lang-btn{
+    min-width:64px!important;
+    height:40px!important;
+    min-height:40px!important;
+    margin:0!important;
+  }
+
+  html.apk-modern .notification-wrap{
+    position:relative!important;
+    flex:0 0 40px!important;
+  }
+}
+
+@media (max-width:430px){
+  html.apk-modern .topbar-right{
+    column-gap:7px!important;
+    margin-left:8px!important;
+  }
+}
