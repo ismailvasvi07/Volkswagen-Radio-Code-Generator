@@ -5,6 +5,7 @@ import android.app.AlertDialog;
 import android.app.DownloadManager;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
+import android.content.res.Configuration;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
@@ -34,7 +35,10 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.EditText;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import org.json.JSONObject;
@@ -59,6 +63,8 @@ public class MainActivity extends Activity {
     private WebView webView;
     private ProgressBar progress;
     private FrameLayout rootView;
+    private FrameLayout splashOverlay;
+    private boolean splashDismissed = false;
     private SharedPreferences prefs;
     private ValueCallback<Uri[]> fileCallback;
     private String currentServer = "";
@@ -82,6 +88,7 @@ public class MainActivity extends Activity {
                 ViewGroup.LayoutParams.MATCH_PARENT, dp(3));
         pp.gravity = Gravity.TOP;
         rootView.addView(progress, pp);
+        addStartupSplash();
         setContentView(rootView);
 
         rootView.setOnApplyWindowInsetsListener((v, insets) -> {
@@ -100,8 +107,77 @@ public class MainActivity extends Activity {
         configureWebView();
         currentServer = normalizeServer(prefs.getString(KEY_SERVER, ""));
 
-        if (currentServer.isEmpty()) showServerDialog(true);
+        if (currentServer.isEmpty()) { hideStartupSplash(); showServerDialog(true); }
         else loadServer();
+    }
+
+    private void addStartupSplash() {
+        splashOverlay = new FrameLayout(this);
+        splashOverlay.setBackgroundColor(Color.rgb(250, 251, 252));
+
+        LinearLayout box = new LinearLayout(this);
+        box.setOrientation(LinearLayout.VERTICAL);
+        box.setGravity(Gravity.CENTER);
+        box.setPadding(dp(24), dp(24), dp(24), dp(24));
+
+        ImageView logo = new ImageView(this);
+        logo.setImageResource(com.alcomet.maintenance.R.mipmap.ic_launcher);
+        logo.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
+        LinearLayout.LayoutParams logoParams = new LinearLayout.LayoutParams(dp(92), dp(92));
+        logoParams.gravity = Gravity.CENTER_HORIZONTAL;
+        box.addView(logo, logoParams);
+
+        TextView title = new TextView(this);
+        title.setText("ALCOMET");
+        title.setTextColor(Color.rgb(29, 58, 78));
+        title.setTextSize(22);
+        title.setGravity(Gravity.CENTER);
+        title.setTypeface(android.graphics.Typeface.DEFAULT_BOLD);
+        LinearLayout.LayoutParams titleParams = new LinearLayout.LayoutParams(
+                ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        titleParams.gravity = Gravity.CENTER_HORIZONTAL;
+        titleParams.topMargin = dp(10);
+        box.addView(title, titleParams);
+
+        TextView sub = new TextView(this);
+        sub.setText("Maintenance");
+        sub.setTextColor(Color.rgb(118, 139, 153));
+        sub.setTextSize(11);
+        sub.setGravity(Gravity.CENTER);
+        LinearLayout.LayoutParams subParams = new LinearLayout.LayoutParams(
+                ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        subParams.gravity = Gravity.CENTER_HORIZONTAL;
+        subParams.topMargin = dp(2);
+        box.addView(sub, subParams);
+
+        ProgressBar spinner = new ProgressBar(this);
+        spinner.setIndeterminate(true);
+        LinearLayout.LayoutParams spinnerParams = new LinearLayout.LayoutParams(dp(30), dp(30));
+        spinnerParams.gravity = Gravity.CENTER_HORIZONTAL;
+        spinnerParams.topMargin = dp(22);
+        box.addView(spinner, spinnerParams);
+
+        FrameLayout.LayoutParams boxParams = new FrameLayout.LayoutParams(
+                ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        boxParams.gravity = Gravity.CENTER;
+        splashOverlay.addView(box, boxParams);
+
+        rootView.addView(splashOverlay, new FrameLayout.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+
+        logo.setAlpha(0f);
+        logo.setScaleX(0.88f);
+        logo.setScaleY(0.88f);
+        logo.animate().alpha(1f).scaleX(1f).scaleY(1f).setDuration(420).start();
+    }
+
+    private void hideStartupSplash() {
+        if (splashOverlay == null || splashDismissed) return;
+        splashDismissed = true;
+        splashOverlay.animate().alpha(0f).setDuration(220).withEndAction(() -> {
+            if (rootView != null && splashOverlay != null) rootView.removeView(splashOverlay);
+            splashOverlay = null;
+        }).start();
     }
 
     private int dp(int value) {
@@ -165,12 +241,14 @@ public class MainActivity extends Activity {
                 injectRememberMe();
                 injectNotificationReliabilityFix();
                 injectWorkshopDropdown();
+                injectTaskFileRemoval();
+                hideStartupSplash();
             }
 
             @Override
             public void onReceivedError(WebView view, WebResourceRequest request,
                                         WebResourceError error) {
-                if (request.isForMainFrame()) showConnectionError();
+                if (request.isForMainFrame()) { hideStartupSplash(); showConnectionError(); }
             }
 
             @Override
@@ -578,6 +656,45 @@ public class MainActivity extends Activity {
         webView.evaluateJavascript(js, null);
     }
 
+    private void injectTaskFileRemoval() {
+        String js = "(function(){"
+                + "function bind(){"
+                + "var input=document.getElementById('taskFiles');var list=document.getElementById('taskFileList');"
+                + "if(!input||!list||input.__apkRemoveBound)return;"
+                + "input.__apkRemoveBound=true;"
+                + "var original=input.onchange;"
+                + "function render(){"
+                + "var files=Array.prototype.slice.call(input.files||[]);"
+                + "list.innerHTML='';"
+                + "files.forEach(function(file,index){"
+                + "var row=document.createElement('div');row.className='apk-task-file-row';"
+                + "var name=document.createElement('span');name.className='apk-task-file-name';"
+                + "name.textContent=file.name+' · '+Math.ceil(file.size/1024)+' KB';"
+                + "var remove=document.createElement('button');remove.type='button';remove.className='apk-task-file-remove';"
+                + "remove.setAttribute('aria-label','Премахни файла');remove.title='Премахни файла';remove.textContent='×';"
+                + "remove.addEventListener('click',function(e){"
+                + "e.preventDefault();e.stopPropagation();"
+                + "var current=Array.prototype.slice.call(input.files||[]);"
+                + "var dt=new DataTransfer();"
+                + "current.forEach(function(f,i){if(i!==index)dt.items.add(f);});"
+                + "input.files=dt.files;"
+                + "render();"
+                + "});"
+                + "row.appendChild(name);row.appendChild(remove);list.appendChild(row);"
+                + "});"
+                + "}"
+                + "input.onchange=function(e){if(typeof original==='function')original.call(input,e);setTimeout(render,0);};"
+                + "render();"
+                + "}"
+                + "bind();"
+                + "if(!window.__alcometTaskFileRemoveObserver){"
+                + "var t=null;window.__alcometTaskFileRemoveObserver=new MutationObserver(function(){clearTimeout(t);t=setTimeout(bind,25);});"
+                + "window.__alcometTaskFileRemoveObserver.observe(document.body,{childList:true,subtree:true});"
+                + "}"
+                + "})();";
+        webView.evaluateJavascript(js, null);
+    }
+
     private void applySystemBars(boolean dark) {
         int bg = dark ? Color.rgb(7, 21, 35) : Color.rgb(250, 251, 252);
         if (rootView != null) rootView.setBackgroundColor(bg);
@@ -710,6 +827,19 @@ public class MainActivity extends Activity {
 
         dialog.setOnCancelListener(d -> connectionDialogVisible = false);
         dialog.show();
+    }
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        if (rootView != null) {
+            rootView.requestApplyInsets();
+            rootView.requestLayout();
+        }
+        if (webView != null) {
+            webView.requestLayout();
+            webView.invalidate();
+        }
     }
 
     @Override
