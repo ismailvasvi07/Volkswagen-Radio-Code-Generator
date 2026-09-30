@@ -1599,3 +1599,210 @@
     margin-left:7px!important;
   }
 }
+
+
+/* v2.0.13 - attachment thumbnails, visible remove button, scrollable task dialog */
+@media (max-width:900px){
+  html.apk-modern #taskFileList,
+  html.apk-modern .task-file-list{
+    display:grid!important;
+    grid-template-columns:repeat(auto-fill,minmax(86px,1fr))!important;
+    gap:9px!important;
+    width:100%!important;
+    max-width:100%!important;
+    margin-top:10px!important;
+    padding:0!important;
+    overflow:visible!important;
+    box-sizing:border-box!important;
+  }
+
+  html.apk-modern .apk-task-file-card{
+    min-width:0!important;
+    width:100%!important;
+    overflow:hidden!important;
+    border:1px solid #1a4059!important;
+    border-radius:11px!important;
+    background:#0a2031!important;
+    color:#c7d9e6!important;
+    box-shadow:none!important;
+  }
+
+  html.apk-modern .apk-task-file-visual{
+    position:relative!important;
+    width:100%!important;
+    aspect-ratio:1.18 / 1!important;
+    min-height:72px!important;
+    overflow:hidden!important;
+    display:grid!important;
+    place-items:center!important;
+    background:#102b3e!important;
+  }
+
+  html.apk-modern .apk-task-file-thumb{
+    width:100%!important;
+    height:100%!important;
+    object-fit:cover!important;
+    display:block!important;
+    border:0!important;
+    border-radius:0!important;
+  }
+
+  html.apk-modern .apk-task-file-video{
+    background:#06141f!important;
+  }
+
+  html.apk-modern .apk-task-file-play{
+    position:absolute!important;
+    left:50%!important;
+    top:50%!important;
+    transform:translate(-50%,-50%)!important;
+    display:grid!important;
+    place-items:center!important;
+    width:28px!important;
+    height:28px!important;
+    border-radius:50%!important;
+    background:rgba(5,20,31,.72)!important;
+    color:#fff!important;
+    font-size:11px!important;
+    line-height:1!important;
+    pointer-events:none!important;
+  }
+
+  html.apk-modern .apk-task-file-doc-icon{
+    font-size:28px!important;
+    line-height:1!important;
+    filter:none!important;
+  }
+
+  html.apk-modern .apk-task-file-ext{
+    position:absolute!important;
+    left:6px!important;
+    bottom:6px!important;
+    max-width:calc(100% - 12px)!important;
+    overflow:hidden!important;
+    text-overflow:ellipsis!important;
+    white-space:nowrap!important;
+    padding:3px 5px!important;
+    border-radius:6px!important;
+    background:rgba(5,20,31,.76)!important;
+    color:#dff5ff!important;
+    font-size:7px!important;
+    font-weight:800!important;
+    line-height:1!important;
+  }
+
+  html.apk-modern .apk-task-file-meta{
+    display:flex!important;
+    align-items:center!important;
+    gap:5px!important;
+    min-width:0!important;
+    padding:6px 7px 7px!important;
+  }
+
+  html.apk-modern .apk-task-file-name{
+    display:block!important;
+    flex:1 1 auto!important;
+    min-width:0!important;
+    max-width:100%!important;
+    overflow:hidden!important;
+    text-overflow:ellipsis!important;
+    white-space:nowrap!important;
+    font-size:8.5px!important;
+    line-height:1.15!important;
+  }
+
+  html.apk-modern .apk-task-file-size{
+    flex:0 0 auto!important;
+    color:#7894a7!important;
+    font-size:7px!important;
+    white-space:nowrap!important;
+  }
+
+  html.apk-modern .apk-task-file-remove{
+    position:absolute!important;
+    top:5px!important;
+    right:5px!important;
+    z-index:5!important;
+    display:grid!important;
+    place-items:center!important;
+    width:24px!important;
+    min-width:24px!important;
+    max-width:24px!important;
+    height:24px!important;
+    min-height:24px!important;
+    max-height:24px!important;
+    margin:0!important;
+    padding:0 0 2px!important;
+    border:1px solid rgba(255,255,255,.78)!important;
+    border-radius:50%!important;
+    background:rgba(198,55,65,.94)!important;
+    color:#fff!important;
+    font-size:17px!important;
+    font-weight:800!important;
+    line-height:1!important;
+    box-shadow:0 2px 7px rgba(0,0,0,.20)!important;
+  }
+
+  html.apk-modern .apk-task-file-remove:active{
+    transform:scale(.92)!important;
+  }
+
+  html.apk-modern[data-theme="light"] .apk-task-file-card{
+    background:#fff!important;
+    border-color:#d5e3ec!important;
+    color:#3e596b!important;
+  }
+  html.apk-modern[data-theme="light"] .apk-task-file-visual{
+    background:#eef6fa!important;
+  }
+  html.apk-modern[data-theme="light"] .apk-task-file-size{
+    color:#8093a0!important;
+  }
+
+  /* The task creation modal must remain vertically scrollable after attachments are added. */
+  html.apk-modern .apk-task-modal-scroll{
+    overflow-x:hidden!important;
+    overflow-y:auto!important;
+    overscroll-behavior-y:contain!important;
+    touch-action:pan-y!important;
+    -webkit-overflow-scrolling:touch!important;
+    max-height:calc(100dvh - 24px)!important;
+    box-sizing:border-box!important;
+  }
+
+  html.apk-modern .apk-task-modal-scroll-body{
+    overflow:visible!important;
+    touch-action:pan-y!important;
+    min-height:max-content!important;
+    padding-bottom:28px!important;
+  }
+
+  html.apk-modern dialog.modal:has(#taskFiles),
+  html.apk-modern dialog:has(#taskFiles),
+  html.apk-modern [role="dialog"]:has(#taskFiles),
+  html.apk-modern .modal:has(#taskFiles){
+    overflow-x:hidden!important;
+    overflow-y:auto!important;
+    touch-action:pan-y!important;
+    -webkit-overflow-scrolling:touch!important;
+    overscroll-behavior-y:contain!important;
+    max-height:calc(100dvh - 24px)!important;
+  }
+}
+
+@media (max-width:430px){
+  html.apk-modern #taskFileList,
+  html.apk-modern .task-file-list{
+    grid-template-columns:repeat(3,minmax(0,1fr))!important;
+    gap:7px!important;
+  }
+  html.apk-modern .apk-task-file-visual{
+    min-height:68px!important;
+  }
+  html.apk-modern .apk-task-file-name{
+    font-size:8px!important;
+  }
+  html.apk-modern .apk-task-file-size{
+    font-size:6.5px!important;
+  }
+}
