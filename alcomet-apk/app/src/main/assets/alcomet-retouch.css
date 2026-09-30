@@ -1806,3 +1806,64 @@
     font-size:6.5px!important;
   }
 }
+
+
+/* v2.0.14 - cumulative attachments + remove empty modal floor */
+@media (max-width:900px){
+  html.apk-modern .apk-task-modal-autoheight,
+  html.apk-modern dialog.modal:has(#taskFiles),
+  html.apk-modern dialog:has(#taskFiles),
+  html.apk-modern [role="dialog"]:has(#taskFiles),
+  html.apk-modern .modal:has(#taskFiles){
+    height:auto!important;
+    min-height:0!important;
+    max-height:calc(100dvh - 20px)!important;
+    overflow-x:hidden!important;
+    overflow-y:auto!important;
+    align-self:center!important;
+    box-sizing:border-box!important;
+  }
+
+  html.apk-modern .apk-task-modal-autoheight-child,
+  html.apk-modern .apk-task-modal-scroll-body,
+  html.apk-modern .apk-task-modal-form,
+  html.apk-modern dialog.modal:has(#taskFiles) .modal-content,
+  html.apk-modern dialog.modal:has(#taskFiles) .modal-body,
+  html.apk-modern dialog:has(#taskFiles) .modal-content,
+  html.apk-modern dialog:has(#taskFiles) .modal-body,
+  html.apk-modern .modal:has(#taskFiles) .modal-content,
+  html.apk-modern .modal:has(#taskFiles) .modal-body{
+    height:auto!important;
+    min-height:0!important;
+    max-height:none!important;
+    overflow:visible!important;
+    flex:0 0 auto!important;
+    box-sizing:border-box!important;
+  }
+
+  html.apk-modern .apk-task-modal-form{
+    padding-bottom:8px!important;
+    margin-bottom:0!important;
+  }
+
+  html.apk-modern dialog.modal:has(#taskFiles) .modal-footer,
+  html.apk-modern dialog:has(#taskFiles) .modal-footer,
+  html.apk-modern .modal:has(#taskFiles) .modal-footer{
+    position:static!important;
+    margin-top:10px!important;
+    padding-bottom:10px!important;
+  }
+
+  html.apk-modern #taskFileList:empty,
+  html.apk-modern .task-file-list:empty{
+    display:none!important;
+    margin:0!important;
+    padding:0!important;
+    min-height:0!important;
+  }
+
+  html.apk-modern #taskFileList:not(:empty),
+  html.apk-modern .task-file-list:not(:empty){
+    margin-bottom:8px!important;
+  }
+}
