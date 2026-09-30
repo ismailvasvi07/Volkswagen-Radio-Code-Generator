@@ -1867,3 +1867,43 @@
     margin-bottom:8px!important;
   }
 }
+
+
+/* v2.0.15 - remove collapsed task-modal line and restore stable sheet geometry */
+@media (max-width:900px){
+  html.apk-modern .apk-task-modal-autoheight,
+  html.apk-modern .apk-task-modal-autoheight-child{
+    height:revert!important;
+    min-height:revert!important;
+    max-height:revert!important;
+    flex:revert!important;
+  }
+
+  html.apk-modern dialog.modal:has(#taskFiles),
+  html.apk-modern dialog:has(#taskFiles),
+  html.apk-modern [role="dialog"]:has(#taskFiles),
+  html.apk-modern .modal:has(#taskFiles){
+    height:86dvh!important;
+    min-height:86dvh!important;
+    max-height:86dvh!important;
+    overflow-x:hidden!important;
+    overflow-y:auto!important;
+    touch-action:pan-y!important;
+    -webkit-overflow-scrolling:touch!important;
+    box-sizing:border-box!important;
+  }
+
+  html.apk-modern dialog.modal:has(#taskFiles) .modal-content,
+  html.apk-modern dialog.modal:has(#taskFiles) .modal-body,
+  html.apk-modern dialog:has(#taskFiles) .modal-content,
+  html.apk-modern dialog:has(#taskFiles) .modal-body,
+  html.apk-modern .modal:has(#taskFiles) .modal-content,
+  html.apk-modern .modal:has(#taskFiles) .modal-body,
+  html.apk-modern .apk-task-modal-scroll-body{
+    height:auto!important;
+    min-height:0!important;
+    max-height:none!important;
+    overflow:visible!important;
+    touch-action:pan-y!important;
+  }
+}
