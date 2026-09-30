@@ -40,6 +40,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.ByteArrayOutputStream;
@@ -63,6 +64,8 @@ public class MainActivity extends Activity {
     private ProgressBar progress;
     private FrameLayout rootView;
     private FrameLayout splashOverlay;
+    private WebView splashLogoWeb;
+    private TextView splashFallbackLogo;
     private boolean splashDismissed = false;
     private SharedPreferences prefs;
     private ValueCallback<Uri[]> fileCallback;
@@ -83,10 +86,7 @@ public class MainActivity extends Activity {
                 ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.MATCH_PARENT));
 
-        FrameLayout.LayoutParams pp = new FrameLayout.LayoutParams(
-                ViewGroup.LayoutParams.MATCH_PARENT, dp(3));
-        pp.gravity = Gravity.TOP;
-        rootView.addView(progress, pp);
+        progress.setVisibility(View.GONE);
         addStartupSplash();
         setContentView(rootView);
 
@@ -119,34 +119,43 @@ public class MainActivity extends Activity {
         box.setGravity(Gravity.CENTER);
         box.setPadding(dp(24), dp(24), dp(24), dp(24));
 
-        TextView logo = new TextView(this);
-        logo.setText("ALC⚙MET");
-        logo.setTextColor(Color.rgb(16, 153, 217));
-        logo.setTextSize(30);
-        logo.setGravity(Gravity.CENTER);
-        logo.setTypeface(android.graphics.Typeface.DEFAULT_BOLD);
-        logo.setLetterSpacing(0.03f);
-        LinearLayout.LayoutParams logoParams = new LinearLayout.LayoutParams(
-                ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-        logoParams.gravity = Gravity.CENTER_HORIZONTAL;
-        box.addView(logo, logoParams);
+        FrameLayout logoHost = new FrameLayout(this);
+        LinearLayout.LayoutParams logoHostParams = new LinearLayout.LayoutParams(dp(250), dp(92));
+        logoHostParams.gravity = Gravity.CENTER_HORIZONTAL;
+        box.addView(logoHost, logoHostParams);
 
-        TextView sub = new TextView(this);
-        sub.setText("Maintenance");
-        sub.setTextColor(Color.rgb(118, 139, 153));
-        sub.setTextSize(11);
-        sub.setGravity(Gravity.CENTER);
-        LinearLayout.LayoutParams subParams = new LinearLayout.LayoutParams(
-                ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-        subParams.gravity = Gravity.CENTER_HORIZONTAL;
-        subParams.topMargin = dp(2);
-        box.addView(sub, subParams);
+        splashLogoWeb = new WebView(this);
+        splashLogoWeb.setBackgroundColor(Color.TRANSPARENT);
+        splashLogoWeb.setVerticalScrollBarEnabled(false);
+        splashLogoWeb.setHorizontalScrollBarEnabled(false);
+        splashLogoWeb.setOverScrollMode(View.OVER_SCROLL_NEVER);
+        WebSettings ls = splashLogoWeb.getSettings();
+        ls.setJavaScriptEnabled(false);
+        ls.setLoadWithOverviewMode(true);
+        ls.setUseWideViewPort(true);
+        logoHost.addView(splashLogoWeb, new FrameLayout.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+
+        splashFallbackLogo = new TextView(this);
+        splashFallbackLogo.setText("ALCOMET\nMAINTENANCE");
+        splashFallbackLogo.setTextColor(Color.rgb(15, 69, 125));
+        splashFallbackLogo.setTextSize(25);
+        splashFallbackLogo.setGravity(Gravity.CENTER);
+        splashFallbackLogo.setTypeface(android.graphics.Typeface.DEFAULT_BOLD);
+        splashFallbackLogo.setLetterSpacing(0.02f);
+        logoHost.addView(splashFallbackLogo, new FrameLayout.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+
+        String cachedLogo = prefs.getString(KEY_SPLASH_LOGO_URL, "");
+        if (cachedLogo != null && !cachedLogo.trim().isEmpty()) {
+            showSplashLogoUrl(cachedLogo.trim());
+        }
 
         ProgressBar spinner = new ProgressBar(this);
         spinner.setIndeterminate(true);
         LinearLayout.LayoutParams spinnerParams = new LinearLayout.LayoutParams(dp(30), dp(30));
         spinnerParams.gravity = Gravity.CENTER_HORIZONTAL;
-        spinnerParams.topMargin = dp(22);
+        spinnerParams.topMargin = dp(14);
         box.addView(spinner, spinnerParams);
 
         FrameLayout.LayoutParams boxParams = new FrameLayout.LayoutParams(
@@ -157,10 +166,50 @@ public class MainActivity extends Activity {
         rootView.addView(splashOverlay, new FrameLayout.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
 
-        logo.setAlpha(0f);
-        logo.setScaleX(0.88f);
-        logo.setScaleY(0.88f);
-        logo.animate().alpha(1f).scaleX(1f).scaleY(1f).setDuration(420).start();
+        box.setAlpha(0f);
+        box.setScaleX(0.94f);
+        box.setScaleY(0.94f);
+        box.animate().alpha(1f).scaleX(1f).scaleY(1f).setDuration(360).start();
+    }
+
+    private void showSplashLogoUrl(String src) {
+        if (splashLogoWeb == null || src == null || src.trim().isEmpty()) return;
+        String safe = src.replace("&", "&amp;").replace("\"", "&quot;")
+                .replace("<", "&lt;").replace(">", "&gt;");
+        String html = "<!doctype html><html><head><meta name='viewport' content='width=device-width,initial-scale=1'>"
+                + "<style>html,body{margin:0;width:100%;height:100%;background:transparent;overflow:hidden}"
+                + "body{display:flex;align-items:center;justify-content:center}"
+                + "img{display:block;max-width:96%;max-height:86px;width:auto;height:auto;object-fit:contain}</style></head>"
+                + "<body><img src=\"" + safe + "\"></body></html>";
+        splashLogoWeb.loadDataWithBaseURL(null, html, "text/html", "UTF-8", null);
+        splashLogoWeb.setVisibility(View.VISIBLE);
+        if (splashFallbackLogo != null) splashFallbackLogo.setVisibility(View.GONE);
+    }
+
+    private void captureSidebarLogoThenHideSplash() {
+        if (splashOverlay == null || splashDismissed || webView == null) {
+            hideStartupSplash();
+            return;
+        }
+        String js = "(function(){"
+                + "var imgs=Array.prototype.slice.call(document.querySelectorAll('.sidebar img,aside img,[class*=sidebar] img,img'));"
+                + "var best=imgs.find(function(i){var s=((i.alt||'')+' '+(i.src||'')+' '+(i.className||'')).toLowerCase();return s.indexOf('alcomet')>=0||s.indexOf('logo')>=0;});"
+                + "if(!best&&imgs.length)best=imgs[0];"
+                + "return best&&best.src?best.src:'';"
+                + "})();";
+        webView.evaluateJavascript(js, value -> {
+            String src = "";
+            try {
+                src = new JSONArray("[" + value + "]").getString(0);
+            } catch (Exception ignored) {}
+            if (src != null && !src.trim().isEmpty() && !"null".equalsIgnoreCase(src.trim())) {
+                prefs.edit().putString(KEY_SPLASH_LOGO_URL, src.trim()).apply();
+                showSplashLogoUrl(src.trim());
+                if (splashOverlay != null) splashOverlay.postDelayed(this::hideStartupSplash, 550);
+            } else {
+                hideStartupSplash();
+            }
+        });
     }
 
     private void hideStartupSplash() {
@@ -168,6 +217,12 @@ public class MainActivity extends Activity {
         splashDismissed = true;
         splashOverlay.animate().alpha(0f).setDuration(220).withEndAction(() -> {
             if (rootView != null && splashOverlay != null) rootView.removeView(splashOverlay);
+            if (splashLogoWeb != null) {
+                splashLogoWeb.stopLoading();
+                splashLogoWeb.destroy();
+                splashLogoWeb = null;
+            }
+            splashFallbackLogo = null;
             splashOverlay = null;
         }).start();
     }
@@ -234,7 +289,7 @@ public class MainActivity extends Activity {
                 injectNotificationReliabilityFix();
                 injectWorkshopDropdown();
                 injectTaskFileRemoval();
-                hideStartupSplash();
+                captureSidebarLogoThenHideSplash();
             }
 
             @Override
@@ -654,10 +709,10 @@ public class MainActivity extends Activity {
                 + "function enableTaskModalScroll(input){"
                 + "var dialog=input.closest('dialog.modal,dialog,[role=dialog],.modal');"
                 + "var form=input.closest('form');"
-                + "if(dialog){dialog.classList.add('apk-task-modal-scroll','apk-task-modal-autoheight');"
+                + "if(dialog){dialog.classList.remove('apk-task-modal-autoheight');dialog.classList.add('apk-task-modal-scroll');"
                 + "var body=dialog.querySelector('.modal-content,.modal-body,.dialog-content')||input.closest('.modal-content,.modal-body,.dialog-content');"
-                + "if(body)body.classList.add('apk-task-modal-scroll-body','apk-task-modal-autoheight-child');"
-                + "var n=input.parentElement;while(n&&n!==dialog){n.classList.add('apk-task-modal-autoheight-child');n=n.parentElement;}"
+                + "if(body){body.classList.remove('apk-task-modal-autoheight-child');body.classList.add('apk-task-modal-scroll-body');}"
+                + "dialog.querySelectorAll('.apk-task-modal-autoheight-child').forEach(function(n){n.classList.remove('apk-task-modal-autoheight-child');});"
                 + "}"
                 + "if(form)form.classList.add('apk-task-modal-form');"
                 + "}"
