@@ -63,6 +63,7 @@ import javax.crypto.spec.GCMParameterSpec;
 public class MainActivity extends Activity {
     private static final String PREFS = "alcomet_mobile";
     private static final String KEY_SERVER = "server_url";
+    private static final String KEY_SPLASH_LOGO_URL = "splash_logo_url";
     private static final String KEY_CREDENTIAL_BLOB = "remember_credentials_blob";
     private static final String CREDENTIAL_KEY_ALIAS = "alcomet_maintenance_credentials_v1";
     private static final int FILE_CHOOSER_REQ = 1201;
