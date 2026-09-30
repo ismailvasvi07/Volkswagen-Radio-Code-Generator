@@ -2213,3 +2213,178 @@
     overflow:visible!important;
   }
 }
+
+
+/* v2.0.19 - solid New Task header + integrated selects (no Android native popup) */
+html.apk-modern .apk-native-select-hidden{
+  display:none!important;
+}
+
+@media (max-width:900px){
+  html.apk-modern dialog.modal.task-create-modal[open] .task-create-head{
+    position:sticky!important;
+    top:0!important;
+    z-index:50!important;
+    display:flex!important;
+    flex-direction:row!important;
+    align-items:center!important;
+    justify-content:space-between!important;
+    gap:12px!important;
+    width:100%!important;
+    min-height:68px!important;
+    padding:12px 16px!important;
+    margin:0!important;
+    background:#ffffff!important;
+    border-bottom:1px solid #d8e4ec!important;
+    box-shadow:0 3px 10px rgba(34,64,86,.06)!important;
+    box-sizing:border-box!important;
+    overflow:visible!important;
+  }
+
+  html.apk-modern[data-theme="dark"] dialog.modal.task-create-modal[open] .task-create-head,
+  html.apk-modern:not([data-theme="light"]) dialog.modal.task-create-modal[open] .task-create-head{
+    background:#081d2c!important;
+    border-bottom-color:#183c55!important;
+    box-shadow:0 3px 12px rgba(0,0,0,.16)!important;
+  }
+
+  html.apk-modern dialog.modal.task-create-modal[open] .task-create-head h1,
+  html.apk-modern dialog.modal.task-create-modal[open] .task-create-head h2,
+  html.apk-modern dialog.modal.task-create-modal[open] .task-create-head h3,
+  html.apk-modern dialog.modal.task-create-modal[open] .task-create-head .title,
+  html.apk-modern dialog.modal.task-create-modal[open] .task-create-head [class*="title"]{
+    flex:1 1 auto!important;
+    min-width:0!important;
+    margin:0!important;
+    padding:0!important;
+    line-height:1.15!important;
+  }
+
+  html.apk-modern dialog.modal.task-create-modal[open] .task-create-head button{
+    flex:0 0 auto!important;
+    margin:0!important;
+    position:static!important;
+    inset:auto!important;
+    transform:none!important;
+  }
+
+  html.apk-modern .task-create-modal .apk-inline-select{
+    position:relative!important;
+    display:block!important;
+    width:100%!important;
+    margin:0!important;
+    padding:0!important;
+    box-sizing:border-box!important;
+  }
+
+  html.apk-modern .task-create-modal .apk-inline-select-button{
+    display:flex!important;
+    align-items:center!important;
+    justify-content:space-between!important;
+    gap:10px!important;
+    width:100%!important;
+    min-height:50px!important;
+    padding:0 14px!important;
+    margin:0!important;
+    border:1px solid #d0dde6!important;
+    border-radius:12px!important;
+    background:#fff!important;
+    color:#263e4e!important;
+    box-shadow:none!important;
+    font:inherit!important;
+    font-size:16px!important;
+    text-align:left!important;
+  }
+
+  html.apk-modern[data-theme="dark"] .task-create-modal .apk-inline-select-button,
+  html.apk-modern:not([data-theme="light"]) .task-create-modal .apk-inline-select-button{
+    background:#081b2a!important;
+    border-color:#1a4059!important;
+    color:#d5e4ee!important;
+  }
+
+  html.apk-modern .task-create-modal .apk-inline-select-chevron{
+    flex:0 0 auto!important;
+    color:#6f828f!important;
+    font-size:18px!important;
+    line-height:1!important;
+    transition:transform .16s ease!important;
+  }
+
+  html.apk-modern .task-create-modal .apk-inline-select.open .apk-inline-select-chevron{
+    transform:rotate(180deg)!important;
+  }
+
+  html.apk-modern .task-create-modal .apk-inline-select-menu{
+    display:none!important;
+    width:100%!important;
+    max-height:260px!important;
+    margin:6px 0 2px!important;
+    padding:5px!important;
+    overflow-x:hidden!important;
+    overflow-y:auto!important;
+    -webkit-overflow-scrolling:touch!important;
+    border:1px solid #d0dde6!important;
+    border-radius:12px!important;
+    background:#fff!important;
+    box-shadow:0 10px 24px rgba(30,60,82,.10)!important;
+    box-sizing:border-box!important;
+  }
+
+  html.apk-modern .task-create-modal .apk-inline-select.open .apk-inline-select-menu{
+    display:block!important;
+  }
+
+  html.apk-modern[data-theme="dark"] .task-create-modal .apk-inline-select-menu,
+  html.apk-modern:not([data-theme="light"]) .task-create-modal .apk-inline-select-menu{
+    background:#0a2132!important;
+    border-color:#1c465f!important;
+    box-shadow:0 12px 28px rgba(0,0,0,.24)!important;
+  }
+
+  html.apk-modern .task-create-modal .apk-inline-select-option{
+    display:flex!important;
+    align-items:center!important;
+    width:100%!important;
+    min-height:44px!important;
+    margin:0!important;
+    padding:9px 11px!important;
+    border:0!important;
+    border-radius:9px!important;
+    background:transparent!important;
+    color:#2c4352!important;
+    box-shadow:none!important;
+    font:inherit!important;
+    font-size:15px!important;
+    text-align:left!important;
+  }
+
+  html.apk-modern[data-theme="dark"] .task-create-modal .apk-inline-select-option,
+  html.apk-modern:not([data-theme="light"]) .task-create-modal .apk-inline-select-option{
+    color:#d2e1eb!important;
+  }
+
+  html.apk-modern .task-create-modal .apk-inline-select-option + .apk-inline-select-option{
+    border-top:1px solid rgba(128,151,166,.15)!important;
+  }
+
+  html.apk-modern .task-create-modal .apk-inline-select-option.selected{
+    background:#e8f7fd!important;
+    color:#0877a7!important;
+    font-weight:700!important;
+  }
+
+  html.apk-modern[data-theme="dark"] .task-create-modal .apk-inline-select-option.selected,
+  html.apk-modern:not([data-theme="light"]) .task-create-modal .apk-inline-select-option.selected{
+    background:#103b55!important;
+    color:#78d8ff!important;
+  }
+
+  html.apk-modern .task-create-modal .apk-inline-select-option:disabled{
+    opacity:.42!important;
+  }
+
+  html.apk-modern .task-create-modal .apk-inline-select.disabled{
+    opacity:.58!important;
+  }
+}
