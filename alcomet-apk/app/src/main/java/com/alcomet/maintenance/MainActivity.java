@@ -9,6 +9,8 @@ import android.content.res.Configuration;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -35,6 +37,7 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.EditText;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -44,8 +47,12 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.security.KeyStore;
 
 import javax.crypto.Cipher;
@@ -76,6 +83,7 @@ public class MainActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         prefs = getSharedPreferences(PREFS, MODE_PRIVATE);
+        currentServer = normalizeServer(prefs.getString(KEY_SERVER, ""));
 
         rootView = new FrameLayout(this);
         webView = new WebView(this);
@@ -104,7 +112,6 @@ public class MainActivity extends Activity {
 
         applySystemBars(false);
         configureWebView();
-        currentServer = normalizeServer(prefs.getString(KEY_SERVER, ""));
 
         if (currentServer.isEmpty()) { hideStartupSplash(); showServerDialog(true); }
         else loadServer();
@@ -119,43 +126,19 @@ public class MainActivity extends Activity {
         box.setGravity(Gravity.CENTER);
         box.setPadding(dp(24), dp(24), dp(24), dp(24));
 
-        FrameLayout logoHost = new FrameLayout(this);
-        LinearLayout.LayoutParams logoHostParams = new LinearLayout.LayoutParams(dp(250), dp(92));
-        logoHostParams.gravity = Gravity.CENTER_HORIZONTAL;
-        box.addView(logoHost, logoHostParams);
-
-        splashLogoWeb = new WebView(this);
-        splashLogoWeb.setBackgroundColor(Color.TRANSPARENT);
-        splashLogoWeb.setVerticalScrollBarEnabled(false);
-        splashLogoWeb.setHorizontalScrollBarEnabled(false);
-        splashLogoWeb.setOverScrollMode(View.OVER_SCROLL_NEVER);
-        WebSettings ls = splashLogoWeb.getSettings();
-        ls.setJavaScriptEnabled(false);
-        ls.setLoadWithOverviewMode(true);
-        ls.setUseWideViewPort(true);
-        logoHost.addView(splashLogoWeb, new FrameLayout.LayoutParams(
-                ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
-
-        splashFallbackLogo = new TextView(this);
-        splashFallbackLogo.setText("ALCOMET\nMAINTENANCE");
-        splashFallbackLogo.setTextColor(Color.rgb(15, 69, 125));
-        splashFallbackLogo.setTextSize(25);
-        splashFallbackLogo.setGravity(Gravity.CENTER);
-        splashFallbackLogo.setTypeface(android.graphics.Typeface.DEFAULT_BOLD);
-        splashFallbackLogo.setLetterSpacing(0.02f);
-        logoHost.addView(splashFallbackLogo, new FrameLayout.LayoutParams(
-                ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
-
-        String cachedLogo = prefs.getString(KEY_SPLASH_LOGO_URL, "");
-        if (cachedLogo != null && !cachedLogo.trim().isEmpty()) {
-            showSplashLogoUrl(cachedLogo.trim());
-        }
+        ImageView logo = new ImageView(this);
+        logo.setScaleType(ImageView.ScaleType.FIT_CENTER);
+        logo.setAdjustViewBounds(true);
+        logo.setAlpha(0f);
+        LinearLayout.LayoutParams logoParams = new LinearLayout.LayoutParams(dp(272), dp(78));
+        logoParams.gravity = Gravity.CENTER_HORIZONTAL;
+        box.addView(logo, logoParams);
 
         ProgressBar spinner = new ProgressBar(this);
         spinner.setIndeterminate(true);
         LinearLayout.LayoutParams spinnerParams = new LinearLayout.LayoutParams(dp(30), dp(30));
         spinnerParams.gravity = Gravity.CENTER_HORIZONTAL;
-        spinnerParams.topMargin = dp(14);
+        spinnerParams.topMargin = dp(20);
         box.addView(spinner, spinnerParams);
 
         FrameLayout.LayoutParams boxParams = new FrameLayout.LayoutParams(
@@ -166,50 +149,62 @@ public class MainActivity extends Activity {
         rootView.addView(splashOverlay, new FrameLayout.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
 
-        box.setAlpha(0f);
-        box.setScaleX(0.94f);
-        box.setScaleY(0.94f);
-        box.animate().alpha(1f).scaleX(1f).scaleY(1f).setDuration(360).start();
+        loadSidebarLogoForSplash(logo);
     }
 
-    private void showSplashLogoUrl(String src) {
-        if (splashLogoWeb == null || src == null || src.trim().isEmpty()) return;
-        String safe = src.replace("&", "&amp;").replace("\"", "&quot;")
-                .replace("<", "&lt;").replace(">", "&gt;");
-        String html = "<!doctype html><html><head><meta name='viewport' content='width=device-width,initial-scale=1'>"
-                + "<style>html,body{margin:0;width:100%;height:100%;background:transparent;overflow:hidden}"
-                + "body{display:flex;align-items:center;justify-content:center}"
-                + "img{display:block;max-width:96%;max-height:86px;width:auto;height:auto;object-fit:contain}</style></head>"
-                + "<body><img src=\"" + safe + "\"></body></html>";
-        splashLogoWeb.loadDataWithBaseURL(null, html, "text/html", "UTF-8", null);
-        splashLogoWeb.setVisibility(View.VISIBLE);
-        if (splashFallbackLogo != null) splashFallbackLogo.setVisibility(View.GONE);
-    }
+    private void loadSidebarLogoForSplash(ImageView logo) {
+        File cached = new File(getFilesDir(), "alcomet-maintenance-logo-darkclean.png");
 
-    private void captureSidebarLogoThenHideSplash() {
-        if (splashOverlay == null || splashDismissed || webView == null) {
-            hideStartupSplash();
-            return;
-        }
-        String js = "(function(){"
-                + "var imgs=Array.prototype.slice.call(document.querySelectorAll('.sidebar img,aside img,[class*=sidebar] img,img'));"
-                + "var best=imgs.find(function(i){var s=((i.alt||'')+' '+(i.src||'')+' '+(i.className||'')).toLowerCase();return s.indexOf('alcomet')>=0||s.indexOf('logo')>=0;});"
-                + "if(!best&&imgs.length)best=imgs[0];"
-                + "return best&&best.src?best.src:'';"
-                + "})();";
-        webView.evaluateJavascript(js, value -> {
-            String src = "";
-            try {
-                src = new JSONArray("[" + value + "]").getString(0);
-            } catch (Exception ignored) {}
-            if (src != null && !src.trim().isEmpty() && !"null".equalsIgnoreCase(src.trim())) {
-                prefs.edit().putString(KEY_SPLASH_LOGO_URL, src.trim()).apply();
-                showSplashLogoUrl(src.trim());
-                if (splashOverlay != null) splashOverlay.postDelayed(this::hideStartupSplash, 550);
-            } else {
-                hideStartupSplash();
+        if (cached.isFile()) {
+            Bitmap bitmap = BitmapFactory.decodeFile(cached.getAbsolutePath());
+            if (bitmap != null) {
+                logo.setImageBitmap(bitmap);
+                logo.animate().alpha(1f).setDuration(220).start();
             }
-        });
+        }
+
+        if (currentServer == null || currentServer.isEmpty()) return;
+
+        new Thread(() -> {
+            HttpURLConnection connection = null;
+            try {
+                URL url = new URL(currentServer + "/assets/alcomet-maintenance-logo-darkclean.png?v=1.48.9.1");
+                connection = (HttpURLConnection) url.openConnection();
+                connection.setConnectTimeout(3000);
+                connection.setReadTimeout(3500);
+                connection.setUseCaches(false);
+                connection.setRequestProperty("Cache-Control", "no-cache");
+
+                try (InputStream in = connection.getInputStream();
+                     ByteArrayOutputStream out = new ByteArrayOutputStream()) {
+                    byte[] buffer = new byte[8192];
+                    int n;
+                    int total = 0;
+                    while ((n = in.read(buffer)) > 0 && total < 1024 * 1024) {
+                        out.write(buffer, 0, n);
+                        total += n;
+                    }
+                    byte[] bytes = out.toByteArray();
+                    Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+                    if (bitmap == null) return;
+
+                    try (FileOutputStream fos = new FileOutputStream(cached)) {
+                        fos.write(bytes);
+                    }
+
+                    runOnUiThread(() -> {
+                        if (logo.getWindowToken() == null && splashOverlay == null) return;
+                        logo.setImageBitmap(bitmap);
+                        logo.setScaleX(0.96f);
+                        logo.setScaleY(0.96f);
+                        logo.animate().alpha(1f).scaleX(1f).scaleY(1f).setDuration(260).start();
+                    });
+                }
+            } catch (Exception ignored) {
+            } finally {
+                if (connection != null) connection.disconnect();
+            }
+        }).start();
     }
 
     private void hideStartupSplash() {
@@ -256,7 +251,7 @@ public class MainActivity extends Activity {
             @Override
             public void onProgressChanged(WebView view, int newProgress) {
                 progress.setProgress(newProgress);
-                progress.setVisibility(newProgress >= 100 ? View.GONE : View.VISIBLE);
+                progress.setVisibility(View.GONE);
             }
 
             @Override
