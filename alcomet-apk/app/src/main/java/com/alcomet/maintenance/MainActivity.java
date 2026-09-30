@@ -285,7 +285,7 @@ public class MainActivity extends Activity {
                 injectNotificationReliabilityFix();
                 injectWorkshopDropdown();
                 injectTaskFileRemoval();
-                captureSidebarLogoThenHideSplash();
+                hideStartupSplash();
             }
 
             @Override
