@@ -1907,3 +1907,84 @@
     touch-action:pan-y!important;
   }
 }
+
+
+/* v2.0.15 - restore New Task dialog; remove collapsed-line regression */
+@media (max-width:900px){
+  html.apk-modern dialog.modal.task-create-modal[open]{
+    position:fixed!important;
+    left:6px!important;
+    right:6px!important;
+    top:50%!important;
+    bottom:auto!important;
+    inset:auto 6px auto 6px!important;
+    transform:translateY(-50%)!important;
+    width:auto!important;
+    height:auto!important;
+    min-height:0!important;
+    max-height:calc(100dvh - 12px)!important;
+    margin:0!important;
+    padding:0!important;
+    display:block!important;
+    overflow:hidden!important;
+    box-sizing:border-box!important;
+  }
+
+  html.apk-modern dialog.modal.task-create-modal[open] > #modalBody{
+    position:static!important;
+    inset:auto!important;
+    display:block!important;
+    width:100%!important;
+    height:auto!important;
+    min-height:0!important;
+    max-height:calc(100dvh - 12px)!important;
+    margin:0!important;
+    padding:0!important;
+    overflow:hidden!important;
+    box-sizing:border-box!important;
+  }
+
+  html.apk-modern dialog.modal.task-create-modal[open] .task-create-card{
+    position:static!important;
+    inset:auto!important;
+    display:flex!important;
+    flex-direction:column!important;
+    width:100%!important;
+    height:auto!important;
+    min-height:0!important;
+    max-height:calc(100dvh - 12px)!important;
+    margin:0!important;
+    overflow:hidden!important;
+    box-sizing:border-box!important;
+  }
+
+  html.apk-modern dialog.modal.task-create-modal[open] .task-create-head{
+    flex:0 0 auto!important;
+  }
+
+  html.apk-modern dialog.modal.task-create-modal[open] .task-create-content{
+    flex:0 1 auto!important;
+    height:auto!important;
+    min-height:0!important;
+    max-height:calc(100dvh - 132px)!important;
+    overflow-x:hidden!important;
+    overflow-y:auto!important;
+    touch-action:pan-y!important;
+    -webkit-overflow-scrolling:touch!important;
+    overscroll-behavior-y:contain!important;
+  }
+
+  html.apk-modern dialog.modal.task-create-modal[open] .task-create-actions{
+    flex:0 0 auto!important;
+    position:static!important;
+    inset:auto!important;
+    margin:0!important;
+  }
+
+  /* Neutralize the v2.0.14 recursive classes if they remained in an already-open DOM. */
+  html.apk-modern .task-create-modal .apk-task-modal-autoheight-child{
+    height:auto!important;
+    min-height:0!important;
+    max-height:none!important;
+  }
+}
